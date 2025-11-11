@@ -7,19 +7,102 @@ import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check, Loader2, Github } from 'lucide-react';
+import { SiweMessage } from 'siwe';
+import { useSignMessage } from 'wagmi';
 
 export default function OnboardingPage() {
   const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSyncing, setIsSyncing] = useState(false);
   const [githubToken, setGithubToken] = useState('');
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
 
+  // Check existing session on mount
   useEffect(() => {
-    if (isConnected && address) {
-      setCurrentStep(2);
+    checkSession();
+  }, []);
+
+  // Handle wallet connection
+  useEffect(() => {
+    if (isConnected && address && currentStep === 1) {
+      authenticateWithSIWE();
     }
   }, [isConnected, address]);
+
+  const checkSession = async () => {
+    try {
+      const res = await fetch('/api/auth/session');
+      const session = await res.json();
+      
+      if (session.isLoggedIn) {
+        if (session.githubConnected) {
+          setCurrentStep(3);
+        } else {
+          setCurrentStep(2);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking session:', error);
+    } finally {
+      setIsCheckingSession(false);
+    }
+  };
+
+  const authenticateWithSIWE = async () => {
+    if (isAuthenticating || !address) return;
+    
+    setIsAuthenticating(true);
+    try {
+      // Get nonce
+      const nonceRes = await fetch('/api/auth/nonce');
+      const { nonce } = await nonceRes.json();
+
+      // Create SIWE message
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: 'Sign in to GitCaster',
+        uri: window.location.origin,
+        version: '1',
+        chainId: 1,
+        nonce,
+      });
+
+      const messageToSign = message.prepareMessage();
+
+      // Sign message
+      const signature = await signMessageAsync({ message: messageToSign });
+
+      // Verify signature
+      const verifyRes = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageToSign,
+          signature,
+        }),
+      });
+
+      if (verifyRes.ok) {
+        const data = await verifyRes.json();
+        if (data.user.githubConnected) {
+          setCurrentStep(3);
+        } else {
+          setCurrentStep(2);
+        }
+      }
+    } catch (error: any) {
+      console.error('Authentication error:', error);
+      if (error.message !== 'User rejected the request.') {
+        alert('Failed to authenticate. Please try again.');
+      }
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
 
   const connectGitHub = () => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || 'Ov23liVQtsdvlqV0Ipt7';
@@ -117,12 +200,27 @@ export default function OnboardingPage() {
           <CardContent className="space-y-4">
             {currentStep === 1 && (
               <div className="text-center py-8">
-                <p className="mb-6 text-gray-600">
-                  Connect your wallet to authenticate and create your profile
-                </p>
-                <p className="text-sm text-gray-500">
-                  Click "Connect Wallet" in the header to get started
-                </p>
+                {isCheckingSession ? (
+                  <>
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+                    <p className="text-gray-600">Checking authentication...</p>
+                  </>
+                ) : isAuthenticating ? (
+                  <>
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+                    <p className="text-gray-600 mb-2">Authenticating...</p>
+                    <p className="text-sm text-gray-500">Please sign the message in your wallet</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="mb-6 text-gray-600">
+                      Connect your wallet to authenticate and create your profile
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Click "Connect Wallet" in the header to get started
+                    </p>
+                  </>
+                )}
               </div>
             )}
 
