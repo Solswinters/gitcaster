@@ -1,4 +1,4 @@
-import { mainnet, polygon, arbitrum, optimism, base } from '@reown/appkit/networks';
+import { mainnet, polygon, arbitrum, optimism, base, sepolia } from '@reown/appkit/networks';
 
 export const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
 
@@ -6,7 +6,7 @@ if (!projectId) {
   throw new Error('NEXT_PUBLIC_REOWN_PROJECT_ID is not set');
 }
 
-// Define metadata
+// Define metadata for AppKit
 export const metadata = {
   name: 'GitCaster',
   description: 'Build your developer reputation profile with GitHub and onchain activity',
@@ -14,5 +14,13 @@ export const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 };
 
-export const networks = [mainnet, polygon, arbitrum, optimism, base];
+// Define supported networks
+export const networks = [
+  mainnet,
+  polygon,
+  arbitrum,
+  optimism,
+  base,
+  sepolia, // Add testnet for development
+];
 
