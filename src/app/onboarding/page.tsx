@@ -1,24 +1,39 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Loader2, Github } from 'lucide-react';
+import { Check, Loader2, Github, Wallet } from 'lucide-react';
 import { SiweMessage } from 'siwe';
 import { useSignMessage } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
 
 export default function OnboardingPage() {
   const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
+  const { connectors, connect } = useConnect();
+  const { open } = useAppKit();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSyncing, setIsSyncing] = useState(false);
   const [githubToken, setGithubToken] = useState('');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [hasWalletExtension, setHasWalletExtension] = useState(false);
+
+  // Check for wallet extensions on mount
+  useEffect(() => {
+    const checkWalletExtension = () => {
+      const hasMetaMask = typeof window !== 'undefined' && window.ethereum;
+      const hasConnectors = connectors && connectors.length > 0;
+      setHasWalletExtension(hasMetaMask || hasConnectors);
+    };
+    
+    checkWalletExtension();
+  }, [connectors]);
 
   // Check existing session on mount
   useEffect(() => {
@@ -27,10 +42,10 @@ export default function OnboardingPage() {
 
   // Handle wallet connection
   useEffect(() => {
-    if (isConnected && address && currentStep === 1) {
+    if (isConnected && address && currentStep === 1 && !isAuthenticating) {
       authenticateWithSIWE();
     }
-  }, [isConnected, address]);
+  }, [isConnected, address, currentStep]);
 
   const checkSession = async () => {
     try {
@@ -213,12 +228,31 @@ export default function OnboardingPage() {
                   </>
                 ) : (
                   <>
-                    <p className="mb-6 text-gray-600">
-                      Connect your wallet to authenticate and create your profile
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Click "Connect Wallet" in the header to get started
-                    </p>
+                    <div className="mb-6">
+                      <Wallet className="w-16 h-16 mx-auto mb-4 text-blue-600" />
+                      <p className="text-gray-600 mb-2">
+                        Connect your wallet to authenticate and create your profile
+                      </p>
+                      {hasWalletExtension && (
+                        <p className="text-sm text-green-600 flex items-center justify-center gap-1">
+                          <Check size={16} /> Wallet extension detected
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Button onClick={() => open()} size="lg" className="w-full max-w-sm">
+                        <Wallet className="mr-2" size={20} />
+                        Connect Wallet
+                      </Button>
+                      
+                      <p className="text-xs text-gray-500">
+                        {hasWalletExtension 
+                          ? 'Use your browser wallet, email, or social login'
+                          : 'Connect via email, social login, or install a wallet extension'
+                        }
+                      </p>
+                    </div>
                   </>
                 )}
               </div>
