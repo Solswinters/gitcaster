@@ -10,7 +10,7 @@ export class TalentProtocolClient {
     this.apiKey = apiKey;
   }
 
-  private async request<T>(endpoint: string): Promise<T> {
+  private async request<T>(endpoint: string): Promise<T | null> {
     try {
       const response = await axios.get(`${TALENT_PROTOCOL_API_BASE}${endpoint}`, {
         headers: {
@@ -19,6 +19,13 @@ export class TalentProtocolClient {
       });
       return response.data;
     } catch (error: any) {
+      // If resource not found (404), return null - this is expected for users without a passport
+      if (error.response?.status === 404) {
+        console.log(`Talent Protocol: No passport found (${endpoint})`);
+        return null;
+      }
+      
+      // For other errors, throw
       console.error(`Talent Protocol API Error (${endpoint}):`, error.response?.data || error.message);
       throw new Error(`Failed to fetch ${endpoint}: ${error.response?.data?.message || error.message}`);
     }
@@ -29,7 +36,7 @@ export class TalentProtocolClient {
       const response = await this.request<{ passport: TalentProtocolScore }>(
         `/passports/${walletAddress.toLowerCase()}`
       );
-      return response.passport;
+      return response?.passport || null;
     } catch (error) {
       console.error('Error fetching Talent Protocol passport:', error);
       return null;

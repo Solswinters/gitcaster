@@ -208,10 +208,15 @@ export default function OnboardingPage() {
         throw new Error('Failed to sync GitHub data');
       }
 
-      // Sync Talent Protocol data
-      await fetch('/api/sync/talent', {
+      // Sync Talent Protocol data (optional)
+      const talentRes = await fetch('/api/sync/talent', {
         method: 'POST',
       });
+      
+      const talentData = await talentRes.json();
+      if (talentData.success && !talentData.hasPassport) {
+        console.log('Note: No Talent Protocol passport found - this is optional');
+      }
 
       setCurrentStep(4);
       

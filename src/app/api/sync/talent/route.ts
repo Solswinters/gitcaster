@@ -31,14 +31,15 @@ export async function POST() {
         await prisma.syncLog.update({
           where: { id: syncLog.id },
           data: {
-            status: 'error',
-            message: 'No Talent Protocol passport found for this wallet',
+            status: 'success',
+            message: 'No Talent Protocol passport found - this is optional',
           },
         });
 
         return NextResponse.json({
-          success: false,
-          message: 'No Talent Protocol passport found',
+          success: true,
+          hasPassport: false,
+          message: 'No Talent Protocol passport found. You can create one at https://talentprotocol.com',
         });
       }
 
