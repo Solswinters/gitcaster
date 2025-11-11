@@ -148,7 +148,7 @@ export default function DashboardPage() {
       
       <main className="container mx-auto px-6 lg:px-8 py-8 max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-3">Dashboard</h1>
           <p className="text-gray-600">Manage your developer profile</p>
         </div>
 
