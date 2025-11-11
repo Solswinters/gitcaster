@@ -19,7 +19,7 @@ export default function Home() {
             Showcase your GitHub activity and onchain builder score in one powerful profile. 
             Stand out to recruiters and land your dream job.
           </p>
-          <div className="flex gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/onboarding">
               <Button size="lg">
                 Create Your Profile
