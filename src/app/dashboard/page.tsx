@@ -193,7 +193,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex gap-3">
-                <Button onClick={refreshData} disabled={isRefreshing} variant="outline">
+                <Button onClick={refreshData} loading={isRefreshing} variant="outline">
                   <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh Data
                 </Button>
