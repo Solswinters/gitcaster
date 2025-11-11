@@ -11,7 +11,7 @@ export default function Home() {
       
       <main role="main">
         {/* Hero Section */}
-        <section className="container mx-auto px-6 lg:px-8 py-24 lg:py-32 text-center">
+        <section className="container mx-auto px-6 lg:px-8 py-24 lg:py-32 text-center" aria-label="Hero section">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8">
             Build Your Developer <span className="text-blue-600">Reputation</span>
           </h1>
