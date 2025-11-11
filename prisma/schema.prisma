@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  walletAddress String    @unique
+  email         String?
+  githubId      String?   @unique
+  githubUsername String?  @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  profile       Profile?
+  githubStats   GitHubStats?
+  syncLogs      SyncLog[]
+  
+  @@index([walletAddress])
+  @@index([githubUsername])
+}
+
+model Profile {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  slug                String    @unique
+  displayName         String?
+  bio                 String?
+  avatarUrl           String?
+  location            String?
+  company             String?
+  website             String?
+  isPublic            Boolean   @default(true)
+  talentScore         Float?
+  talentPassportData  Json?
+  viewCount           Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([slug])
+  @@index([isPublic])
+}
+
+model GitHubStats {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  
+  // User Stats
+  publicRepos           Int       @default(0)
+  publicGists           Int       @default(0)
+  followers             Int       @default(0)
+  following             Int       @default(0)
+  totalStars            Int       @default(0)
+  totalForks            Int       @default(0)
+  
+  // Activity Stats
+  totalCommits          Int       @default(0)
+  totalPRs              Int       @default(0)
+  totalIssues           Int       @default(0)
+  totalContributions    Int       @default(0)
+  
+  // Language Stats (JSON array of {language, percentage, bytes})
+  languages             Json?
+  
+  // Contribution Graph (JSON array of {date, count})
+  contributionGraph     Json?
+  
+  // Top Repositories (JSON array of top repos with details)
+  topRepositories       Json?
+  
+  // Recent Activity (JSON array of recent commits, PRs, issues)
+  recentActivity        Json?
+  
+  // Organizations
+  organizations         Json?
+  
+  lastSyncedAt          DateTime  @default(now())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+model SyncLog {
+  id          String    @id @default(cuid())
+  userId      String
+  syncType    String    // 'github' | 'talent-protocol'
+  status      String    // 'success' | 'error' | 'in-progress'
+  message     String?
+  syncedAt    DateTime  @default(now())
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([syncType])
+}
