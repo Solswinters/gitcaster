@@ -67,15 +67,42 @@ export default function DashboardPage() {
   const refreshData = async () => {
     setIsRefreshing(true);
     try {
-      // Sync GitHub data (using stored token)
-      const syncRes = await fetch('/api/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}), // No token needed - uses stored token
-      });
+      // Check if user has a stored token
+      if (!session?.hasGithubToken) {
+        // Need to provide token for first-time or legacy accounts
+        const token = prompt(
+          'GitHub token not found. Please provide your GitHub Personal Access Token:\n\n' +
+          'Create one at: https://github.com/settings/tokens\n' +
+          'Required scopes: repo, read:user, read:org\n\n' +
+          'This is a one-time setup - the token will be saved.'
+        );
+        
+        if (!token) {
+          setIsRefreshing(false);
+          return;
+        }
+        
+        // Sync with provided token (will be saved for future use)
+        const syncRes = await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ githubToken: token }),
+        });
 
-      if (!syncRes.ok) {
-        throw new Error('Failed to sync data');
+        if (!syncRes.ok) {
+          throw new Error('Failed to sync data');
+        }
+      } else {
+        // Sync GitHub data (using stored token)
+        const syncRes = await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+
+        if (!syncRes.ok) {
+          throw new Error('Failed to sync data');
+        }
       }
 
       // Sync Talent Protocol data
@@ -86,7 +113,7 @@ export default function DashboardPage() {
       // Refresh profile data
       await fetchProfileData();
       
-      alert('Data refreshed successfully!');
+      alert('Data refreshed successfully! Token saved for future syncs.');
     } catch (error) {
       console.error('Error refreshing data:', error);
       alert('Failed to refresh data. Please try again.');
@@ -142,12 +169,27 @@ export default function DashboardPage() {
                 <Check className="text-green-600" />
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+              <div className={`flex items-center justify-between p-4 rounded-lg ${
+                session?.hasGithubToken ? 'bg-green-50' : 'bg-yellow-50'
+              }`}>
                 <div>
                   <p className="font-semibold">GitHub Connected</p>
-                  <p className="text-sm text-gray-600">Data synced</p>
+                  <p className="text-sm text-gray-600">
+                    {session?.hasGithubToken 
+                      ? 'Token saved - auto-refresh enabled' 
+                      : 'Token not saved - click Refresh to setup'
+                    }
+                  </p>
                 </div>
-                <Check className="text-green-600" />
+                {session?.hasGithubToken ? (
+                  <Check className="text-green-600" />
+                ) : (
+                  <svg className="text-yellow-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                )}
               </div>
 
               <div className="flex gap-3">

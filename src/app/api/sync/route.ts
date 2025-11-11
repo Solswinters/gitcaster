@@ -40,14 +40,22 @@ export async function POST(request: NextRequest) {
       // Use stored GitHub access token, with fallback to request body
       let githubToken = user.githubAccessToken;
       
-      // If no stored token, check request body (for manual token entry)
+      // If no stored token, check request body (for manual token entry or first-time setup)
       if (!githubToken) {
         const body = await request.json().catch(() => ({}));
         githubToken = body.githubToken;
+        
+        // If token provided in request, save it for future use
+        if (githubToken) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { githubAccessToken: githubToken },
+          });
+        }
       }
       
       if (!githubToken) {
-        throw new Error('GitHub token required. Please reconnect your GitHub account.');
+        throw new Error('GitHub token required. Please reconnect your GitHub account or provide a personal access token.');
       }
 
       const githubClient = new GitHubClient(githubToken);
