@@ -7,7 +7,7 @@ export function Header() {
   return (
     <header className="border-b border-gray-200 bg-white">
       <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-8">
-        <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200">
+        <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200" aria-label="GitCaster Home">
           GitCaster
         </Link>
         
