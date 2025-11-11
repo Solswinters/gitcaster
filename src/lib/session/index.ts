@@ -1,6 +1,8 @@
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
-import { SessionData, sessionOptions, defaultSession } from './config';
+import { type SessionData, sessionOptions, defaultSession } from './config';
+
+export type { SessionData };
 
 export async function getSession() {
   const cookieStore = await cookies();
@@ -12,6 +14,4 @@ export async function getSession() {
   
   return session;
 }
-
-export { SessionData };
 
