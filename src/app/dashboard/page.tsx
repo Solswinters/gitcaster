@@ -1,0 +1,198 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { useRouter } from 'next/navigation';
+import { Header } from '@/components/layout/Header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, RefreshCw, Copy, Eye } from 'lucide-react';
+
+export default function DashboardPage() {
+  const { address, isConnected } = useAccount();
+  const router = useRouter();
+  const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isConnected) {
+      router.push('/');
+      return;
+    }
+
+    fetchSession();
+  }, [isConnected, router]);
+
+  const fetchSession = async () => {
+    try {
+      const res = await fetch('/api/auth/session');
+      const data = await res.json();
+      setSession(data);
+
+      if (!data.isLoggedIn) {
+        router.push('/');
+        return;
+      }
+
+      if (!data.githubConnected) {
+        router.push('/onboarding');
+        return;
+      }
+
+      // Fetch profile data
+      // For demo, we'll just show basic info
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching session:', error);
+      setLoading(false);
+    }
+  };
+
+  const refreshData = async () => {
+    setIsRefreshing(true);
+    try {
+      // This would trigger a data refresh
+      alert('Data refresh functionality - requires GitHub token');
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const copyProfileLink = () => {
+    const profileUrl = `${window.location.origin}/profile/${address?.toLowerCase()}`;
+    navigator.clipboard.writeText(profileUrl);
+    alert('Profile link copied!');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+          <p className="text-gray-600">Manage your developer profile</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Status */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Profile Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                <div>
+                  <p className="font-semibold">Wallet Connected</p>
+                  <p className="text-sm text-gray-600 font-mono">
+                    {address?.slice(0, 6)}...{address?.slice(-4)}
+                  </p>
+                </div>
+                <Check className="text-green-600" />
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                <div>
+                  <p className="font-semibold">GitHub Connected</p>
+                  <p className="text-sm text-gray-600">Data synced</p>
+                </div>
+                <Check className="text-green-600" />
+              </div>
+
+              <div className="flex gap-3">
+                <Button onClick={refreshData} disabled={isRefreshing} variant="outline">
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  Refresh Data
+                </Button>
+                <Button onClick={copyProfileLink} variant="outline">
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy Profile Link
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button className="w-full" onClick={() => router.push(`/profile/${address?.toLowerCase()}`)}>
+                <Eye className="mr-2 h-4 w-4" />
+                View My Profile
+              </Button>
+              <Button variant="outline" className="w-full" onClick={() => window.open('https://github.com', '_blank')}>
+                <ExternalLink className="mr-2 h-4 w-4" />
+                GitHub Profile
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">--</p>
+                <p className="text-sm text-gray-600 mt-1">Profile Views</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">--</p>
+                <p className="text-sm text-gray-600 mt-1">GitHub Repos</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-purple-600">--</p>
+                <p className="text-sm text-gray-600 mt-1">Total Commits</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600">--</p>
+                <p className="text-sm text-gray-600 mt-1">Talent Score</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function Check({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  );
+}
+
