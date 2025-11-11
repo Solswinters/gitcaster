@@ -2,13 +2,6 @@ import { cookieStorage, createStorage, http } from 'wagmi';
 import { mainnet, polygon, arbitrum, optimism, base } from 'wagmi/chains';
 import { createConfig } from 'wagmi';
 
-// Get project ID from env
-export const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
-
-if (!projectId) {
-  throw new Error('NEXT_PUBLIC_REOWN_PROJECT_ID is not set');
-}
-
 // Define chains
 export const chains = [mainnet, polygon, arbitrum, optimism, base] as const;
 
