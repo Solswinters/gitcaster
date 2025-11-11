@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  walletAddress String    @unique
-  email         String?
-  githubId      String?   @unique
-  githubUsername String?  @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                 String    @id @default(cuid())
+  walletAddress      String    @unique
+  email              String?
+  githubId           String?   @unique
+  githubUsername     String?   @unique
+  githubAccessToken  String?   // Encrypted GitHub OAuth token
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
   
   profile       Profile?
   githubStats   GitHubStats?

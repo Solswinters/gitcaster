@@ -23,6 +23,7 @@ export default function OnboardingPage() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [hasWalletExtension, setHasWalletExtension] = useState(false);
+  const [hasStoredToken, setHasStoredToken] = useState(false);
 
   // Check for wallet extensions on mount
   useEffect(() => {
@@ -53,6 +54,9 @@ export default function OnboardingPage() {
       const session = await res.json();
       
       if (session.isLoggedIn) {
+        // Check if user has a stored GitHub token
+        setHasStoredToken(session.hasGithubToken || false);
+        
         if (session.githubConnected) {
           setCurrentStep(3);
         } else {
@@ -190,18 +194,19 @@ export default function OnboardingPage() {
   };
 
   const syncData = async () => {
-    if (!githubToken) {
+    // Only require token input if user doesn't have a stored token
+    if (!hasStoredToken && !githubToken) {
       alert('Please provide a GitHub token for syncing');
       return;
     }
 
     setIsSyncing(true);
     try {
-      // Sync GitHub data
+      // Sync GitHub data (token will be used from database if stored, or from input if provided)
       const githubRes = await fetch('/api/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ githubToken }),
+        body: JSON.stringify({ githubToken: hasStoredToken ? undefined : githubToken }),
       });
 
       if (!githubRes.ok) {
@@ -340,26 +345,43 @@ export default function OnboardingPage() {
             {currentStep === 3 && (
               <div className="py-8 space-y-4">
                 <p className="text-center text-gray-600 mb-6">
-                  We'll sync your GitHub activity and Talent Protocol score
+                  {hasStoredToken 
+                    ? "We'll sync your GitHub activity and Talent Protocol score using your saved credentials"
+                    : "We'll sync your GitHub activity and Talent Protocol score"
+                  }
                 </p>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium">
-                    GitHub Personal Access Token (for demo)
-                  </label>
-                  <input
-                    type="text"
-                    value={githubToken}
-                    onChange={(e) => setGithubToken(e.target.value)}
-                    placeholder="ghp_xxxxxxxxxxxx"
-                    className="w-full px-3 py-2 border rounded-lg"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Create a token at: Settings → Developer settings → Personal access tokens
-                  </p>
-                </div>
+                
+                {hasStoredToken ? (
+                  <div className="text-center py-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg mb-4">
+                      <Check size={20} />
+                      <span className="text-sm font-medium">GitHub token already saved</span>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      You won't need to enter it again for future syncs
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium">
+                      GitHub Personal Access Token (one-time setup)
+                    </label>
+                    <input
+                      type="text"
+                      value={githubToken}
+                      onChange={(e) => setGithubToken(e.target.value)}
+                      placeholder="ghp_xxxxxxxxxxxx"
+                      className="w-full px-3 py-2 border rounded-lg"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Create a token at: Settings → Developer settings → Personal access tokens
+                    </p>
+                  </div>
+                )}
+                
                 <Button
                   onClick={syncData}
-                  disabled={isSyncing || !githubToken}
+                  disabled={isSyncing || (!hasStoredToken && !githubToken)}
                   size="lg"
                   className="w-full"
                 >

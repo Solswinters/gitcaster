@@ -37,12 +37,17 @@ export async function POST(request: NextRequest) {
     });
 
     try {
-      // For this demo, we'll use a temporary token approach
-      // In production, you'd store the GitHub access token securely
-      const { githubToken } = await request.json();
+      // Use stored GitHub access token, with fallback to request body
+      let githubToken = user.githubAccessToken;
+      
+      // If no stored token, check request body (for manual token entry)
+      if (!githubToken) {
+        const body = await request.json().catch(() => ({}));
+        githubToken = body.githubToken;
+      }
       
       if (!githubToken) {
-        throw new Error('GitHub token required for sync');
+        throw new Error('GitHub token required. Please reconnect your GitHub account.');
       }
 
       const githubClient = new GitHubClient(githubToken);

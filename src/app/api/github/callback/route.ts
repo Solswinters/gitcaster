@@ -37,12 +37,13 @@ export async function GET(request: NextRequest) {
     const githubClient = new GitHubClient(accessToken);
     const githubUser = await githubClient.getUser();
 
-    // Update user with GitHub info
+    // Update user with GitHub info and save access token
     await prisma.user.update({
       where: { id: session.userId },
       data: {
         githubId: String(githubUser.id),
         githubUsername: githubUser.login,
+        githubAccessToken: accessToken, // Save token for future syncs
       },
     });
 
