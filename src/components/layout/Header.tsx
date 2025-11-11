@@ -12,7 +12,7 @@ export function Header() {
         </Link>
         
         <nav className="flex items-center gap-6">
-          <Link href="/explore" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+          <Link href="/explore" className="text-gray-600 hover:text-gray-900 transition-colors duration-200" aria-label="Explore developer profiles">
             Explore
           </Link>
           <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
