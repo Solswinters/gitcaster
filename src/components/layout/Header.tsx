@@ -11,7 +11,7 @@ export function Header() {
           GitCaster
         </Link>
         
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
           <Link href="/explore" className="text-gray-600 hover:text-gray-900 transition-colors duration-200" aria-label="Explore developer profiles">
             Explore
           </Link>
