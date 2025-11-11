@@ -23,7 +23,7 @@ export default function DashboardPage() {
     }
 
     fetchSession();
-  }, [isConnected, router]);
+  }, [isConnected, address, router]);
 
   const fetchSession = async () => {
     try {
@@ -42,7 +42,7 @@ export default function DashboardPage() {
       }
 
       // Fetch profile data
-      // For demo, we'll just show basic info
+      await fetchProfileData();
       setLoading(false);
     } catch (error) {
       console.error('Error fetching session:', error);
@@ -50,13 +50,46 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchProfileData = async () => {
+    try {
+      const slug = address?.toLowerCase();
+      const res = await fetch(`/api/profile/${slug}`);
+      
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data.profile);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
   const refreshData = async () => {
     setIsRefreshing(true);
     try {
-      // This would trigger a data refresh
-      alert('Data refresh functionality - requires GitHub token');
+      // Sync GitHub data (using stored token)
+      const syncRes = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}), // No token needed - uses stored token
+      });
+
+      if (!syncRes.ok) {
+        throw new Error('Failed to sync data');
+      }
+
+      // Sync Talent Protocol data
+      await fetch('/api/sync/talent', {
+        method: 'POST',
+      });
+
+      // Refresh profile data
+      await fetchProfileData();
+      
+      alert('Data refreshed successfully!');
     } catch (error) {
       console.error('Error refreshing data:', error);
+      alert('Failed to refresh data. Please try again.');
     } finally {
       setIsRefreshing(false);
     }
@@ -140,7 +173,16 @@ export default function DashboardPage() {
                 <Eye className="mr-2 h-4 w-4" />
                 View My Profile
               </Button>
-              <Button variant="outline" className="w-full" onClick={() => window.open('https://github.com', '_blank')}>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => {
+                  const githubUrl = profile?.user?.githubUsername 
+                    ? `https://github.com/${profile.user.githubUsername}`
+                    : 'https://github.com';
+                  window.open(githubUrl, '_blank');
+                }}
+              >
                 <ExternalLink className="mr-2 h-4 w-4" />
                 GitHub Profile
               </Button>
@@ -153,7 +195,9 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">--</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {profile?.viewCount || 0}
+                </p>
                 <p className="text-sm text-gray-600 mt-1">Profile Views</p>
               </div>
             </CardContent>
@@ -161,7 +205,9 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">--</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {profile?.githubStats?.publicRepos || 0}
+                </p>
                 <p className="text-sm text-gray-600 mt-1">GitHub Repos</p>
               </div>
             </CardContent>
@@ -169,7 +215,9 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-purple-600">--</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {profile?.githubStats?.totalCommits || 0}
+                </p>
                 <p className="text-sm text-gray-600 mt-1">Total Commits</p>
               </div>
             </CardContent>
@@ -177,7 +225,9 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600">--</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {profile?.talentScore ? Math.round(profile.talentScore) : '--'}
+                </p>
                 <p className="text-sm text-gray-600 mt-1">Talent Score</p>
               </div>
             </CardContent>
