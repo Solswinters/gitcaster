@@ -71,42 +71,82 @@ export default function OnboardingPage() {
     
     setIsAuthenticating(true);
     try {
-      // Get nonce
-      const nonceRes = await fetch('/api/auth/nonce');
-      const { nonce } = await nonceRes.json();
+      // First, try to detect if this is a smart wallet (email/social login)
+      // Smart wallets from Reown don't need SIWE signing
+      const isSmartWallet = await checkIfSmartWallet(address);
+      
+      if (isSmartWallet) {
+        // For smart wallets, just verify with address only
+        const verifyRes = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address }),
+        });
 
-      // Create SIWE message
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: 'Sign in to GitCaster',
-        uri: window.location.origin,
-        version: '1',
-        chainId: 1,
-        nonce,
-      });
+        if (verifyRes.ok) {
+          const data = await verifyRes.json();
+          if (data.user.githubConnected) {
+            setCurrentStep(3);
+          } else {
+            setCurrentStep(2);
+          }
+          return;
+        }
+      }
 
-      const messageToSign = message.prepareMessage();
+      // For regular EOA wallets (MetaMask, etc.), use SIWE
+      try {
+        const nonceRes = await fetch('/api/auth/nonce');
+        const { nonce } = await nonceRes.json();
 
-      // Sign message
-      const signature = await signMessageAsync({ message: messageToSign });
+        const message = new SiweMessage({
+          domain: window.location.host,
+          address,
+          statement: 'Sign in to GitCaster',
+          uri: window.location.origin,
+          version: '1',
+          chainId: 1,
+          nonce,
+        });
 
-      // Verify signature
-      const verifyRes = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: messageToSign,
-          signature,
-        }),
-      });
+        const messageToSign = message.prepareMessage();
+        const signature = await signMessageAsync({ message: messageToSign });
 
-      if (verifyRes.ok) {
-        const data = await verifyRes.json();
-        if (data.user.githubConnected) {
-          setCurrentStep(3);
+        const verifyRes = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: messageToSign,
+            signature,
+          }),
+        });
+
+        if (verifyRes.ok) {
+          const data = await verifyRes.json();
+          if (data.user.githubConnected) {
+            setCurrentStep(3);
+          } else {
+            setCurrentStep(2);
+          }
+        }
+      } catch (signError: any) {
+        // If signing fails, it might be a smart wallet, try address-only auth
+        console.log('Signing failed, trying smart wallet auth:', signError);
+        const verifyRes = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address }),
+        });
+
+        if (verifyRes.ok) {
+          const data = await verifyRes.json();
+          if (data.user.githubConnected) {
+            setCurrentStep(3);
+          } else {
+            setCurrentStep(2);
+          }
         } else {
-          setCurrentStep(2);
+          throw signError;
         }
       }
     } catch (error: any) {
@@ -116,6 +156,28 @@ export default function OnboardingPage() {
       }
     } finally {
       setIsAuthenticating(false);
+    }
+  };
+
+  const checkIfSmartWallet = async (address: string): Promise<boolean> => {
+    try {
+      // Check if address has code (is a contract)
+      const response = await fetch(`https://eth.llamarpc.com`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'eth_getCode',
+          params: [address, 'latest'],
+          id: 1,
+        }),
+      });
+      const data = await response.json();
+      // If result is not '0x', it's a smart contract wallet
+      return data.result && data.result !== '0x';
+    } catch (error) {
+      console.error('Error checking if smart wallet:', error);
+      return false;
     }
   };
 
