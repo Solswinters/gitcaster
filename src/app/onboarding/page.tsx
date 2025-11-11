@@ -247,7 +247,7 @@ export default function OnboardingPage() {
       
       <main className="container mx-auto px-6 lg:px-8 py-12 max-w-3xl">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">Create Your Profile</h1>
+          <h1 className="text-4xl font-bold mb-3">Create Your Profile</h1>
           <p className="text-gray-600">Follow these steps to set up your developer profile</p>
         </div>
 
