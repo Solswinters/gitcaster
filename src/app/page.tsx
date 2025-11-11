@@ -87,7 +87,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="container mx-auto px-4 py-16 text-center">
+        <section className="container mx-auto px-6 lg:px-8 py-20 text-center" aria-label="Call to action">
           <div className="bg-blue-600 rounded-2xl p-12 text-white">
             <h2 className="text-3xl font-bold mb-4">
               Ready to showcase your skills?
