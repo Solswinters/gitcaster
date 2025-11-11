@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         .slice(0, 20);
 
       // Upsert GitHub stats
-      await prisma.githubStats.upsert({
+      await prisma.gitHubStats.upsert({
         where: { userId: user.id },
         update: {
           publicRepos: repos.length,
