@@ -21,12 +21,12 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/onboarding">
-              <Button size="lg">
+              <Button size="lg" aria-label="Start creating your developer profile">
                 Create Your Profile
               </Button>
             </Link>
             <Link href="/explore">
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" aria-label="Browse developer profiles">
                 Explore Profiles
               </Button>
             </Link>
