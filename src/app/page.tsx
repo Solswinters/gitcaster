@@ -9,7 +9,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <Header />
       
-      <main>
+      <main role="main">
         {/* Hero Section */}
         <section className="container mx-auto px-6 lg:px-8 py-24 lg:py-32 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8">
