@@ -18,7 +18,7 @@ export function ConnectButton() {
 
   if (!mounted) {
     return (
-      <Button variant="outline" size="sm" disabled>
+      <Button variant="outline" size="sm" disabled loading>
         Loading...
       </Button>
     );
