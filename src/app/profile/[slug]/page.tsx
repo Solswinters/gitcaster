@@ -24,9 +24,10 @@ async function getProfile(slug: string) {
 export default async function ProfilePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const profile = await getProfile(params.slug);
+  const { slug } = await params;
+  const profile = await getProfile(slug);
 
   if (!profile) {
     notFound();
