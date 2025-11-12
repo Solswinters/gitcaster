@@ -1,0 +1,26 @@
+# Development Dockerfile for GitCaster
+FROM node:18-alpine
+
+# Install dependencies
+RUN apk add --no-cache libc6-compat git
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application code
+COPY . .
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Expose ports
+EXPOSE 3000
+
+# Start development server
+CMD ["npm", "run", "dev"]
+
