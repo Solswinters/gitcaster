@@ -18,10 +18,20 @@ export function Header() {
             </Link>
         
         <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
-          <Link href="/explore" className="text-gray-600 hover:text-gray-900 transition-colors duration-200" aria-label="Explore developer profiles">
+          <Link 
+            href="/explore" 
+            className="text-gray-600 hover:text-gray-900 transition-colors duration-200" 
+            aria-label="Explore developer profiles"
+            tabIndex={0}
+          >
             Explore
           </Link>
-          <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors duration-200" aria-label="View your dashboard">
+          <Link 
+            href="/dashboard" 
+            className="text-gray-600 hover:text-gray-900 transition-colors duration-200" 
+            aria-label="View your dashboard"
+            tabIndex={0}
+          >
             Dashboard
           </Link>
           <ConnectButton />
