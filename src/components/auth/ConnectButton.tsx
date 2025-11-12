@@ -38,9 +38,15 @@ export function ConnectButton() {
   }
 
   return (
-    <Button onClick={() => open()} size="sm" aria-label="Connect your cryptocurrency wallet">
-      Connect Wallet
-    </Button>
+      <Button 
+        onClick={() => open()} 
+        size="sm" 
+        aria-label="Connect your cryptocurrency wallet"
+        role="button"
+        tabIndex={0}
+      >
+        Connect Wallet
+      </Button>
   );
 }
 
