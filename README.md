@@ -23,7 +23,7 @@ Build your developer reputation profile by showcasing GitHub activity and onchai
 - 🏆 **Talent Protocol Integration**
   - Display onchain builder score (optional)
   - Showcase blockchain credentials
-  - Link to Talent Protocol passport
+  - Link to Talent Protocol passports
 
 - 🎨 **Beautiful Resume-Style Profiles**
   - Professional layout optimized for recruiters
