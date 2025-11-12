@@ -30,7 +30,7 @@ export function ConnectButton() {
         <span className="text-sm text-gray-600 font-mono">
           {address.slice(0, 6)}...{address.slice(-4)}
         </span>
-        <Button variant="outline" size="sm" onClick={() => disconnect()}>
+        <Button variant="outline" size="sm" onClick={() => disconnect()} className="hover:bg-red-50 hover:text-red-600 hover:border-red-300">
           Disconnect
         </Button>
       </div>
