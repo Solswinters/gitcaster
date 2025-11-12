@@ -15,15 +15,24 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  // Wait for component to mount and wagmi to hydrate
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
+    // Don't redirect during initial mount/hydration
+    if (!mounted) return;
+
     if (!isConnected) {
       router.push('/');
       return;
     }
 
     fetchSession();
-  }, [isConnected, address, router]);
+  }, [mounted, isConnected, address, router]);
 
   const fetchSession = async () => {
     try {

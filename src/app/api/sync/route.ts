@@ -153,7 +153,8 @@ export async function POST(request: NextRequest) {
           location: githubUser.location,
           company: githubUser.company,
           website: githubUser.blog,
-          slug: user.githubUsername || user.id,
+          slug: user.walletAddress.toLowerCase(),
+          isPublic: true,
         },
         create: {
           userId: user.id,
@@ -163,7 +164,8 @@ export async function POST(request: NextRequest) {
           location: githubUser.location,
           company: githubUser.company,
           website: githubUser.blog,
-          slug: user.githubUsername || user.id,
+          slug: user.walletAddress.toLowerCase(),
+          isPublic: true,
         },
       });
 
