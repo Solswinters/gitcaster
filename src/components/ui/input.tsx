@@ -9,6 +9,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, label, id, ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    const errorId = `${inputId}-error`;
     
     return (
       <div className="w-full">
@@ -20,6 +21,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           ref={ref}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           className={cn(
             'flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm',
             'placeholder:text-gray-400',
@@ -31,7 +34,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-red-600" role="alert">
+          <p id={errorId} className="mt-1 text-sm text-red-600" role="alert">
             {error}
           </p>
         )}
