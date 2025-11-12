@@ -12,7 +12,11 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:coverage": "jest --coverage",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "validate-env": "node scripts/validate-env.js",
+    "docker:dev": "docker-compose up",
+    "docker:build": "docker build -t gitcaster:latest .",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
