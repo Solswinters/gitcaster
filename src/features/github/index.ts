@@ -13,3 +13,6 @@ export * from './services/githubService';
 // Utilities
 export * from './utils/githubHelpers';
 
+// Hooks
+export * from './hooks/useGitHubSync';
+

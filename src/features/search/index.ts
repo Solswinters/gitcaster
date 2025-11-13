@@ -13,3 +13,6 @@ export * from './services/searchService';
 // Utilities
 export * from './utils/searchHelpers';
 
+// Hooks
+export * from './hooks/useSearch';
+

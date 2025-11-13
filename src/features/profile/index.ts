@@ -13,3 +13,6 @@ export * from './services/profileService';
 // Utilities
 export * from './utils/profileHelpers';
 
+// Hooks
+export * from './hooks/useProfile';
+
