@@ -6,191 +6,299 @@ Thank you for your interest in contributing to GitCaster! This document provides
 
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
-- [Development Process](#development-process)
+- [Development Setup](#development-setup)
+- [Project Structure](#project-structure)
 - [Coding Standards](#coding-standards)
+- [Testing](#testing)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Process](#pull-request-process)
-- [Testing](#testing)
 
 ## Code of Conduct
 
-Be respectful, inclusive, and professional. We're all here to build something great together.
+We are committed to providing a welcoming and inclusive environment. Please:
+
+- Be respectful and considerate
+- Welcome newcomers and help them get started
+- Focus on what is best for the community
+- Show empathy towards other community members
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL
-- Git
-- Docker (optional)
-
-### Setup
-
 1. Fork the repository
-2. Clone your fork:
-```bash
-git clone https://github.com/YOUR_USERNAME/gitcaster.git
-cd gitcaster
-```
+2. Clone your fork
+3. Create a new branch for your feature or bugfix
+4. Make your changes
+5. Test your changes
+6. Submit a pull request
 
-3. Add upstream remote:
-```bash
-git remote add upstream https://github.com/Solswinters/gitcaster.git
-```
+## Development Setup
 
-4. Run setup script:
 ```bash
-./scripts/setup-dev.sh
-```
+# Clone the repository
+git clone https://github.com/yourusername/gitcaster.git
 
-Or manually:
-```bash
+# Install dependencies
 npm install
-cp .env.example .env
-# Edit .env with your values
-npx prisma generate
-npx prisma migrate dev
-```
 
-5. Start development server:
-```bash
+# Copy environment variables
+cp .env.example .env.local
+
+# Run development server
 npm run dev
-```
 
-## Development Process
+# Run tests
+npm test
 
-### Branching Strategy
-
-- `main` - Production-ready code
-- `develop` - Development branch
-- `feature/*` - New features
-- `fix/*` - Bug fixes
-- `docs/*` - Documentation updates
-
-### Workflow
-
-1. Create a branch from `develop`:
-```bash
-git checkout develop
-git pull upstream develop
-git checkout -b feature/your-feature-name
-```
-
-2. Make your changes
-3. Test your changes:
-```bash
+# Run linter
 npm run lint
-npm run type-check
-npm run test
+
+# Build for production
+npm run build
 ```
 
-4. Commit with conventional commits
-5. Push to your fork
-6. Open a Pull Request to `develop`
+## Project Structure
+
+```
+gitcaster/
+├── src/
+│   ├── app/                 # Next.js app directory
+│   ├── shared/             # Shared code
+│   │   ├── components/     # Reusable UI components
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── utils/          # Utility functions
+│   │   ├── services/       # API clients and services
+│   │   └── types/          # TypeScript types
+│   ├── features/           # Feature modules
+│   │   ├── auth/           # Authentication
+│   │   ├── github/         # GitHub integration
+│   │   ├── profile/        # User profiles
+│   │   └── search/         # Search functionality
+│   └── lib/               # Legacy library code
+├── tests/                  # Test files
+│   ├── unit/              # Unit tests
+│   ├── integration/       # Integration tests
+│   └── e2e/              # End-to-end tests
+├── public/               # Static assets
+└── docs/                # Documentation
+```
 
 ## Coding Standards
 
 ### TypeScript
 
 - Use TypeScript for all new code
+- Provide proper type annotations
 - Avoid `any` types when possible
-- Use interfaces for object types
-- Document complex functions with JSDoc comments
+- Use interfaces for object shapes
+- Use type aliases for unions and primitives
 
-### React/Next.js
+```typescript
+// ✅ Good
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// ❌ Bad
+const user: any = { ... };
+```
+
+### React
 
 - Use functional components with hooks
-- Use NativeWind (Tailwind) for styling
-- Keep components under 500 lines
-- Extract reusable logic into custom hooks
-- Use server components by default, client components when needed
+- Keep components small and focused
+- Extract complex logic into custom hooks
+- Use proper prop types
+
+```typescript
+// ✅ Good
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  disabled?: boolean;
+}
+
+export function Button({ onClick, children, disabled = false }: ButtonProps) {
+  return (
+    <button onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  );
+}
+```
 
 ### File Organization
 
-- Keep files under 500 lines
 - One component per file
-- Group related files in feature directories
-- Use barrel exports (index.ts) for public APIs
+- Co-locate related files
+- Use index.ts for barrel exports
+- Group by feature, not by type
+
+```
+// ✅ Good
+src/features/auth/
+├── components/
+│   ├── LoginForm.tsx
+│   └── SignupForm.tsx
+├── hooks/
+│   └── useAuth.ts
+├── services/
+│   └── authService.ts
+└── index.ts
+
+// ❌ Bad
+src/
+├── components/
+│   ├── LoginForm.tsx
+│   └── SignupForm.tsx
+├── hooks/
+│   └── useAuth.ts
+└── services/
+    └── authService.ts
+```
 
 ### Naming Conventions
 
-- **Files**: `kebab-case.tsx`
-- **Components**: `PascalCase`
-- **Functions**: `camelCase`
-- **Constants**: `UPPER_SNAKE_CASE`
-- **Types/Interfaces**: `PascalCase`
+- **Components**: PascalCase (`Button.tsx`, `UserProfile.tsx`)
+- **Hooks**: camelCase with `use` prefix (`useAuth.ts`, `useDebounce.ts`)
+- **Utilities**: camelCase (`formatDate.ts`, `validateEmail.ts`)
+- **Types**: PascalCase (`User.ts`, `ApiResponse.ts`)
+- **Constants**: UPPER_SNAKE_CASE (`API_URL`, `MAX_RETRIES`)
 
-### Code Style
+### Documentation
+
+- Add JSDoc comments for public APIs
+- Include examples in documentation
+- Keep comments up-to-date
+- Document complex logic
 
 ```typescript
-// Good
-export function calculateTotal(items: Item[]): number {
-  return items.reduce((sum, item) => sum + item.price, 0)
+/**
+ * Format a date relative to now
+ *
+ * @param date - Date to format
+ * @returns Relative time string (e.g., "2 hours ago")
+ *
+ * @example
+ * ```typescript
+ * const relative = formatRelativeTime(new Date());
+ * console.log(relative); // "just now"
+ * ```
+ */
+export function formatRelativeTime(date: Date): string {
+  // Implementation
 }
+```
 
-// Use descriptive names
-const isUserAuthenticated = user?.isLoggedIn ?? false
+## Testing
 
-// Prefer early returns
-function processUser(user: User) {
-  if (!user) return null
-  if (!user.isActive) return null
-  
-  return user.data
-}
+### Writing Tests
+
+- Test user behavior, not implementation
+- Use descriptive test names
+- Follow Arrange-Act-Assert pattern
+- Test edge cases and error conditions
+
+```typescript
+describe('Button', () => {
+  it('calls onClick when clicked', () => {
+    const onClick = jest.fn();
+    render(<Button onClick={onClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByText('Click me'));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('is disabled when disabled prop is true', () => {
+    render(<Button onClick={jest.fn()} disabled>Click me</Button>);
+
+    expect(screen.getByText('Click me')).toBeDisabled();
+  });
+});
+```
+
+### Test Coverage
+
+- Aim for 80%+ code coverage
+- Test critical paths thoroughly
+- Don't test third-party code
+- Focus on business logic
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test -- Button.test.tsx
 ```
 
 ## Commit Guidelines
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-<type>(<scope>): <description>
+<type>(<scope>): <subject>
 
-[optional body]
+<body>
 
-[optional footer]
+<footer>
 ```
 
 ### Types
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation only
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Adding/updating tests
-- `chore`: Maintenance tasks
-- `perf`: Performance improvements
-- `ci`: CI/CD changes
-- `build`: Build system changes
+- **feat**: New feature
+- **fix**: Bug fix
+- **docs**: Documentation changes
+- **style**: Code style changes (formatting, etc.)
+- **refactor**: Code refactoring
+- **test**: Adding or updating tests
+- **chore**: Maintenance tasks
 
 ### Examples
 
-```
-feat(profile): add GitHub contribution graph
-fix(auth): resolve wallet connection timeout
-docs(api): update authentication documentation
-test(github): add unit tests for GitHub client
+```bash
+# Feature
+git commit -m "feat(auth): add social login support"
+
+# Bug fix
+git commit -m "fix(api): handle network timeout errors"
+
+# Documentation
+git commit -m "docs(readme): update installation instructions"
+
+# Refactoring
+git commit -m "refactor(utils): extract date formatting logic"
 ```
 
 ### Commit Message Guidelines
 
-- Use present tense ("add feature" not "added feature")
-- Use imperative mood ("move cursor to..." not "moves cursor to...")
-- Keep first line under 72 characters
-- Reference issues: "fixes #123" or "closes #456"
+- Use imperative mood ("Add feature" not "Added feature")
+- Keep subject line under 50 characters
+- Capitalize subject line
+- Don't end subject with period
+- Separate subject from body with blank line
+- Wrap body at 72 characters
+- Explain what and why, not how
 
 ## Pull Request Process
 
 ### Before Submitting
 
-- [ ] Tests pass locally
-- [ ] Code follows style guidelines
-- [ ] Documentation is updated
-- [ ] Commit messages follow conventions
-- [ ] PR description explains changes
+1. Update documentation
+2. Add tests for new features
+3. Ensure all tests pass
+4. Run linter and fix issues
+5. Update CHANGELOG.md if applicable
 
 ### PR Template
 
@@ -205,96 +313,36 @@ Brief description of changes
 - [ ] Documentation update
 
 ## Testing
-How to test these changes
-
-## Screenshots (if applicable)
-Add screenshots for UI changes
+Description of testing done
 
 ## Checklist
-- [ ] Tests pass
-- [ ] Linting passes
+- [ ] Tests added/updated
 - [ ] Documentation updated
-- [ ] Self-reviewed code
+- [ ] Linter passed
+- [ ] All tests passing
 ```
 
 ### Review Process
 
 1. Automated checks must pass
 2. At least one approval required
-3. Address review comments
+3. Address review feedback
 4. Squash commits if needed
-5. Merge to `develop`
+5. Rebase on main before merging
 
-## Testing
+### After Merge
 
-### Unit Tests
+- Delete your branch
+- Update your local main branch
+- Close related issues
 
-```typescript
-// tests/unit/lib/example.test.ts
-import { myFunction } from '@/lib/example'
+## Getting Help
 
-describe('myFunction', () => {
-  it('should return expected result', () => {
-    expect(myFunction('input')).toBe('output')
-  })
-})
-```
+- Check [documentation](./docs/)
+- Search [existing issues](https://github.com/username/gitcaster/issues)
+- Join our [Discord](https://discord.gg/gitcaster)
+- Ask in [Discussions](https://github.com/username/gitcaster/discussions)
 
-### Component Tests
+## License
 
-```typescript
-// tests/unit/components/example.test.tsx
-import { render, screen } from '../../../utils/test-helpers'
-import MyComponent from '@/components/MyComponent'
-
-describe('MyComponent', () => {
-  it('should render correctly', () => {
-    render(<MyComponent />)
-    expect(screen.getByText('Hello')).toBeInTheDocument()
-  })
-})
-```
-
-### E2E Tests
-
-```typescript
-// tests/e2e/example.spec.ts
-import { test, expect } from '@playwright/test'
-
-test('should complete user flow', async ({ page }) => {
-  await page.goto('/')
-  await expect(page).toHaveTitle(/GitCaster/)
-})
-```
-
-### Running Tests
-
-```bash
-# Unit tests
-npm test
-
-# E2E tests
-npm run test:e2e
-
-# Coverage
-npm run test:coverage
-
-# Specific test
-npm test -- tests/unit/lib/example.test.ts
-```
-
-## Documentation
-
-- Update README.md for user-facing changes
-- Update API documentation for new endpoints
-- Add JSDoc comments for public APIs
-- Update CHANGELOG.md (automated)
-
-## Questions?
-
-- 💬 [Discussions](https://github.com/Solswinters/gitcaster/discussions)
-- 🐛 [Issues](https://github.com/Solswinters/gitcaster/issues)
-- 📧 Email: support@gitcaster.dev
-
-Thank you for contributing! 🎉
-
+By contributing, you agree that your contributions will be licensed under the MIT License.
