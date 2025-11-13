@@ -43,3 +43,6 @@ export * from './ErrorTransforms';
 // Error logging
 export * from './ErrorLogger';
 
+// Error monitoring
+export * from './ErrorMonitor';
+
