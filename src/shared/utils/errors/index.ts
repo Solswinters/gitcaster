@@ -46,3 +46,6 @@ export * from './ErrorLogger';
 // Error monitoring
 export * from './ErrorMonitor';
 
+// Error handlers
+export * from './ErrorHandlers';
+
