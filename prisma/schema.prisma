@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  walletAddress     String   @unique
-  email             String?
-  githubId          String?  @unique
-  githubUsername    String?  @unique
-  githubAccessToken String? // Encrypted GitHub OAuth token
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                String  @id @default(cuid())
+  walletAddress     String? @unique
+  githubId          String? @unique
+  githubUsername    String? @unique
+  githubAccessToken String?
+  email             String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   profile     Profile?
-  githubStats GitHubStats?
-  syncLogs    SyncLog[]
+  githubStats GitHubStats[]
 
   @@index([walletAddress])
   @@index([githubUsername])
@@ -51,11 +48,15 @@ model Profile {
   featuredAt        DateTime?
   lastActiveAt      DateTime?
 
+  // Theme customization
+  themeId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   skills ProfileSkill[]
+  theme  ProfileTheme?  @relation(fields: [themeId], references: [id])
 
   @@index([slug])
   @@index([isPublic])
@@ -65,60 +66,90 @@ model Profile {
   @@index([lastActiveAt])
 }
 
+model ProfileTheme {
+  id       String  @id @default(cuid())
+  name     String
+  isPreset Boolean @default(false)
+  isPublic Boolean @default(false)
+
+  // Color scheme
+  primaryColor    String @default("#3b82f6")
+  secondaryColor  String @default("#8b5cf6")
+  accentColor     String @default("#06b6d4")
+  backgroundColor String @default("#ffffff")
+  textColor       String @default("#1f2937")
+
+  // Layout
+  layout String @default("default") // 'default' | 'two-column' | 'grid' | 'minimal'
+
+  // Typography
+  fontFamily String @default("Inter")
+  fontSize   String @default("base") // 'sm' | 'base' | 'lg'
+
+  // Background
+  backgroundPattern String? // 'none' | 'dots' | 'grid' | 'gradient'
+  backgroundImage   String? // URL to custom background
+
+  // Custom CSS
+  customCSS String? @db.Text
+
+  // Metadata
+  createdBy  String?
+  usageCount Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profiles Profile[]
+
+  @@index([isPreset])
+  @@index([isPublic])
+  @@index([usageCount])
+}
+
 model GitHubStats {
-  id     String @id @default(cuid())
-  userId String @unique
-
-  // User Stats
-  publicRepos Int @default(0)
-  publicGists Int @default(0)
-  followers   Int @default(0)
-  following   Int @default(0)
-  totalStars  Int @default(0)
-  totalForks  Int @default(0)
-
-  // Activity Stats
-  totalCommits       Int @default(0)
-  totalPRs           Int @default(0)
-  totalIssues        Int @default(0)
-  totalContributions Int @default(0)
-
-  // Language Stats (JSON array of {language, percentage, bytes})
-  languages Json?
-
-  // Contribution Graph (JSON array of {date, count})
+  id                String @id @default(cuid())
+  userId            String
+  totalCommits      Int?
+  totalPRs          Int?
+  totalIssues       Int?
+  totalStars        Int?
+  publicRepos       Int?
+  followers         Int?
+  following         Int?
+  languages         Json?
+  topRepos          Json?
   contributionGraph Json?
 
-  // Top Repositories (JSON array of top repos with details)
-  topRepositories Json?
+  // Keep old columns for backwards compatibility
+  lastSyncedAt       DateTime?
+  publicGists        Int?
+  recentActivity     Json?
+  topRepositories    Json?
+  totalContributions Int?
+  totalForks         Int?
 
-  // Recent Activity (JSON array of recent commits, PRs, issues)
-  recentActivity Json?
+  lastSyncAt DateTime?
 
-  // Organizations
-  organizations Json?
-
-  lastSyncedAt DateTime @default(now())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([lastSyncAt])
 }
 
 model SyncLog {
-  id       String   @id @default(cuid())
-  userId   String
-  syncType String // 'github' | 'talent-protocol'
-  status   String // 'success' | 'error' | 'in-progress'
-  message  String?
-  syncedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String
+  syncType  String // 'github' | 'talent-protocol'
+  status    String // 'success' | 'error'
+  message   String?
+  createdAt DateTime @default(now())
 
   @@index([userId])
-  @@index([syncType])
+  @@index([createdAt])
 }
 
 model Skill {
