@@ -16,7 +16,17 @@
     "validate-env": "node scripts/validate-env.js",
     "docker:dev": "docker-compose up",
     "docker:build": "docker build -t gitcaster:latest .",
-    "docker:prod": "docker-compose -f docker-compose.prod.yml up"
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up",
+    "setup": "./scripts/setup-dev.sh",
+    "backup": "./scripts/backup-database.sh",
+    "deploy:staging": "./scripts/deploy.sh staging",
+    "deploy:prod": "./scripts/deploy.sh production",
+    "health-check": "./scripts/check-health.sh",
+    "load-test": "node scripts/load-test.js",
+    "db:migrate": "npx prisma migrate dev",
+    "db:migrate:deploy": "npx prisma migrate deploy",
+    "db:studio": "npx prisma studio",
+    "db:seed": "npx prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
