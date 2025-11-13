@@ -8,4 +8,7 @@ export * from './useDebounce';
 export * from './useLocalStorage';
 export * from './useMediaQuery';
 export * from './useToast';
+export * from './useClickOutside';
+export * from './useOnScreen';
+export * from './useCopyToClipboard';
 
