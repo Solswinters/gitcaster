@@ -24,4 +24,6 @@ export * from './Dropdown';
 export * from './Breadcrumbs';
 export * from './Table';
 export * from './Pagination';
+export * from './Menu';
+export * from './Accordion';
 
