@@ -10,17 +10,54 @@ gitcaster/
 │   ├── app/                  # Next.js App Router (pages & API routes)
 │   ├── features/             # Feature modules (domain logic)
 │   │   ├── auth/            # Authentication feature
+│   │   │   ├── types/       # Auth-specific types
+│   │   │   ├── services/    # Auth API services
+│   │   │   ├── hooks/       # Auth React hooks
+│   │   │   └── utils/       # Auth utilities
 │   │   ├── github/          # GitHub integration
+│   │   │   ├── types/       # GitHub types
+│   │   │   ├── services/    # GitHub API services
+│   │   │   ├── hooks/       # GitHub hooks
+│   │   │   └── utils/       # GitHub utilities
 │   │   ├── profile/         # User profiles
+│   │   │   ├── types/       # Profile types
+│   │   │   ├── services/    # Profile services
+│   │   │   ├── hooks/       # Profile hooks
+│   │   │   └── utils/       # Profile utilities
 │   │   └── search/          # Developer search
+│   │       ├── types/       # Search types
+│   │       ├── services/    # Search services
+│   │       ├── hooks/       # Search hooks
+│   │       └── utils/       # Search utilities
 │   ├── shared/              # Shared across features
-│   │   ├── components/      # UI components (loading, etc.)
-│   │   ├── constants/       # App-wide constants
-│   │   ├── hooks/           # Reusable React hooks
-│   │   ├── services/        # API clients
-│   │   ├── test-utils/      # Testing utilities
-│   │   ├── types/           # TypeScript definitions
-│   │   └── utils/           # Utility functions
+│   │   ├── components/      # Reusable UI components
+│   │   │   ├── loading/    # Loading indicators
+│   │   │   ├── error/      # Error components
+│   │   │   ├── feedback/   # Toasts, alerts
+│   │   │   ├── layout/     # Layout components
+│   │   │   └── ui/         # 20+ UI components
+│   │   ├── hooks/          # 15+ custom React hooks
+│   │   ├── contexts/       # React context providers
+│   │   ├── middleware/     # API middleware utilities
+│   │   ├── services/       # Shared services (API clients)
+│   │   ├── constants/      # App-wide constants
+│   │   ├── test-utils/     # Testing utilities
+│   │   ├── types/          # TypeScript type definitions
+│   │   └── utils/          # Comprehensive utility library
+│   │       ├── errors/     # Error handling
+│   │       ├── validation/ # Form & data validation
+│   │       ├── formatting/ # Number, date, string formatting
+│   │       ├── async/      # Async utilities
+│   │       ├── cache/      # Memory caching
+│   │       ├── logger/     # Logging utilities
+│   │       ├── analytics/  # Analytics tracking
+│   │       ├── performance/# Performance monitoring
+│   │       ├── storage/    # Browser storage
+│   │       ├── array/      # Array utilities
+│   │       ├── object/     # Object utilities
+│   │       ├── env/        # Environment utilities
+│   │       ├── url/        # URL utilities
+│   │       └── string/     # String utilities
 │   ├── components/          # Legacy/page-specific components
 │   ├── lib/                 # Legacy utilities (being migrated)
 │   └── types/               # Legacy types (being migrated)
