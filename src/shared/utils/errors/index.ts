@@ -37,3 +37,6 @@ export * from './ErrorBoundaryHOC';
 // Error reporting
 export * from './ErrorReporting';
 
+// Error transformations
+export * from './ErrorTransforms';
+
