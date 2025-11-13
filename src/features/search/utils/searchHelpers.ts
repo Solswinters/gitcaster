@@ -1,5 +1,7 @@
 /**
  * Search Helper Utilities
+ * 
+ * @module features/search/utils/searchHelpers
  */
 
 import type { SearchFilters, SearchResult } from '../types/search.types';
