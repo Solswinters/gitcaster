@@ -31,3 +31,9 @@ export {
 
 export type { RetryOptions } from './ErrorRecovery';
 
+// Error boundaries and HOCs
+export * from './ErrorBoundaryHOC';
+
+// Error reporting
+export * from './ErrorReporting';
+
