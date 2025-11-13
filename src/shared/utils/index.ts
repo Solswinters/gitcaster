@@ -19,3 +19,9 @@ export * from './formatting';
 // Async utilities
 export * from './async';
 
+// Array utilities
+export * from './array';
+
+// Object utilities
+export * from './object';
+
