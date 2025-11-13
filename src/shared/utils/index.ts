@@ -55,3 +55,6 @@ export * from './number';
 // Color utilities
 export * from './color';
 
+// DOM utilities
+export * from './dom';
+
