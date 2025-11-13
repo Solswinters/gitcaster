@@ -22,3 +22,6 @@ export * from './analytics';
 // Collaboration feature
 export * from './collaboration';
 
+// Notifications feature
+export * from './notifications';
+
