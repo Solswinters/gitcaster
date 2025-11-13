@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Test database
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: gitcaster-postgres-test
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: gitcaster_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for test caching
+  redis-test:
+    image: redis:7-alpine
+    container_name: gitcaster-redis-test
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Application for testing
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: gitcaster-app-test
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://test:test@postgres-test:5432/gitcaster_test
+      REDIS_URL: redis://redis-test:6379
+      SESSION_SECRET: test-session-secret-minimum-32-characters-long
+      GITHUB_CLIENT_ID: test-client-id
+      GITHUB_CLIENT_SECRET: test-client-secret
+      NEXT_PUBLIC_REOWN_PROJECT_ID: test-reown-id
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./prisma:/app/prisma
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npx prisma migrate deploy && npm run test:ci"
+
+volumes:
+  postgres-test-data:
+

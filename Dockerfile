@@ -3,12 +3,16 @@ FROM node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+# Install dependencies with better caching
+RUN \
+  --mount=type=cache,target=/root/.npm \
+  npm ci --prefer-offline --no-audit
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -21,7 +25,12 @@ RUN npx prisma generate
 
 # Build Next.js application
 ENV NEXT_TELEMETRY_DISABLED 1
-RUN npm run build
+ENV SKIP_ENV_VALIDATION 1
+
+# Build with layer caching
+RUN \
+  --mount=type=cache,target=/app/.next/cache \
+  npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

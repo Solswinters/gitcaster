@@ -1,27 +1,35 @@
 # Dependencies
 node_modules
-npm-debug.log
-yarn-error.log
-.pnp
-.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-debug.log*
 
 # Testing
 coverage
 .nyc_output
 playwright-report
 test-results
+*.test.ts
+*.spec.ts
+__tests__
+__mocks__
 
 # Next.js
-.next
-out
+.next/
+out/
 build
-
-# Production
 dist
 
 # Misc
 .DS_Store
 *.pem
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Debug
 npm-debug.log*
@@ -29,21 +37,13 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local env files
-.env
-.env.local
 .env*.local
 
 # Vercel
 .vercel
 
-# Git
-.git
-.gitignore
-.gitattributes
-
-# Documentation
-*.md
-!README.md
+# Typescript
+*.tsbuildinfo
 
 # IDE
 .vscode
@@ -52,9 +52,42 @@ yarn-error.log*
 *.swo
 *~
 
-# OS
-Thumbs.db
+# Git
+.git
+.gitignore
+.gitattributes
 
-# TypeScript
-*.tsbuildinfo
+# CI/CD
+.github
 
+# Documentation
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+docs/
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Scripts
+scripts/
+
+# Backups
+backups/
+*.sql
+*.gz
+
+# Logs
+logs/
+*.log
+
+# Kubernetes
+k8s/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
