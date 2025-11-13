@@ -40,3 +40,6 @@ export * from './ErrorReporting';
 // Error transformations
 export * from './ErrorTransforms';
 
+// Error logging
+export * from './ErrorLogger';
+
