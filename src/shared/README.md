@@ -1,93 +1,251 @@
 # Shared Module
 
-This directory contains shared functionality used across the entire application.
+This directory contains shared, reusable code used throughout the application. It provides a comprehensive library of components, hooks, utilities, and services that promote code reuse and consistency.
 
 ## Structure
 
 ```
 shared/
-├── components/     # Reusable UI components
-├── constants/      # Application constants
-├── hooks/          # Custom React hooks
-├── services/       # API and service clients
-├── test-utils/     # Testing utilities
-├── types/          # TypeScript type definitions
-└── utils/          # Utility functions
+├── components/       # Shared React components
+│   ├── loading/     # Loading indicators (Spinner, Skeleton, Progress)
+│   ├── error/       # Error handling components (ErrorBoundary, ErrorDisplay)
+│   ├── feedback/    # User feedback (Toast notifications)
+│   ├── layout/      # Layout components (Container)
+│   └── ui/          # UI components (Button, Input, Card, Modal, etc.)
+├── hooks/           # Custom React hooks (15+ hooks)
+├── contexts/        # React context providers (Toast, Theme)
+├── types/           # TypeScript type definitions
+├── utils/           # Utility functions
+│   ├── errors/      # Error handling utilities
+│   ├── validation/  # Form and data validation
+│   ├── formatting/  # Number, date, string formatting
+│   ├── async/       # Async operation helpers
+│   ├── cache/       # Caching utilities
+│   ├── logger/      # Logging utilities
+│   ├── analytics/   # Analytics tracking
+│   ├── performance/ # Performance monitoring
+│   └── storage/     # Browser storage utilities
+├── middleware/      # API middleware utilities
+├── constants/       # Application constants
+├── services/        # Shared services (API clients, etc.)
+└── test-utils/      # Testing utilities
 ```
 
 ## Components
 
 ### Loading Components
-- `Loader` - Unified loading indicator with multiple variants
-- `Skeleton` - Skeleton loaders for content placeholders
-- `Progress` - Progress bars and indicators
-- `LoadingContainer` - Containers with loading states
+```typescript
+import { 
+  Spinner, 
+  LoadingDots, 
+  Skeleton, 
+  Progress,
+  LoadingContainer 
+} from '@/shared/components/loading';
+```
+
+### UI Components
+```typescript
+import { 
+  Button, 
+  Input, 
+  Select, 
+  Textarea,
+  Checkbox, 
+  Radio, 
+  Switch,
+  Card, 
+  Modal, 
+  Alert,
+  Badge, 
+  Avatar,
+  Tabs,
+  Dropdown,
+  Breadcrumbs,
+  Tooltip
+} from '@/shared/components/ui';
+```
+
+### Error Components
+```typescript
+import { 
+  ErrorBoundary, 
+  ErrorDisplay,
+  InlineError,
+  ErrorBanner,
+  ErrorCard,
+  PageError
+} from '@/shared/components/error';
+```
 
 ## Hooks
 
-- `useAuth` - Authentication state management
-- `useDebounce` - Debounce rapidly changing values
-- `useLocalStorage` - Persist state in localStorage
-- `useMediaQuery` - Responsive design helpers
+### State Management
+- `useDebounce` - Debounce value changes
+- `useLocalStorage` - Persist state to localStorage
+- `useToggle` - Toggle boolean state
+- `usePrevious` - Track previous value
 
-## Services
+### Form Handling
+- `useForm` - Complete form management with validation
+- `useAsync` - Manage async operations state
 
-- `apiClient` - Centralized HTTP client with retry logic
+### UI Interactions
+- `useClickOutside` - Detect clicks outside element
+- `useOnScreen` - Detect if element is visible
+- `useCopyToClipboard` - Copy text to clipboard
+- `useToast` - Show toast notifications
 
-## Types
+### Utility Hooks
+- `useMediaQuery` - Responsive design queries
+- `useWindowSize` - Track window dimensions
+- `useInterval` - Safe interval management
 
-Organized by domain:
-- `auth.ts` - Authentication types
-- `github.ts` - GitHub integration types
-- `profile.ts` - User profile types
-- `integrations.ts` - Third-party integration types
-- `common.ts` - Shared common types
+```typescript
+import { 
+  useDebounce, 
+  useForm, 
+  useAsync,
+  useToggle,
+  useClickOutside 
+} from '@/shared/hooks';
+```
 
-## Utils
+## Utilities
 
 ### Error Handling
-- `ErrorService` - Centralized error management
-- `retry`, `withTimeout`, `CircuitBreaker` - Error recovery
+```typescript
+import { ErrorService, withRetry } from '@/shared/utils/errors';
+```
 
 ### Validation
-- Form validation utilities
-- Field validators
-- Schema builders
+```typescript
+import { 
+  isEmail, 
+  isURL, 
+  validateForm 
+} from '@/shared/utils/validation';
+```
 
 ### Formatting
-- Number formatting (currency, percentages, file sizes)
-- Date formatting (relative time, ISO, calendar)
-- String manipulation
-
-### Async Operations
-- `sleep`, `debounce`, `throttle`
-- `parallel`, `series` - Promise execution
-- `AsyncQueue` - Queue management
-
-### Collections
-- Array utilities (unique, chunk, group, sort)
-- Object utilities (pick, omit, merge, flatten)
-
-## Usage
-
-Import from the shared module:
-
 ```typescript
-import {  
-  Loader,
-  useDebounce,
-  apiClient,
-  UserProfile,
+import { 
+  formatNumber, 
+  formatCurrency,
   formatDate,
-  validateEmail
-} from '@/shared';
+  formatRelativeTime 
+} from '@/shared/utils/formatting';
 ```
 
-Or import from specific submodules:
+### Caching
+```typescript
+import { 
+  MemoryCache, 
+  apiCache,
+  userProfileKey 
+} from '@/shared/utils/cache';
+```
+
+### Logging & Analytics
+```typescript
+import { logger } from '@/shared/utils/logger';
+import { analytics } from '@/shared/utils/analytics';
+
+logger.info('User logged in', { userId: '123' });
+analytics.trackSearch('react hooks', 10);
+```
+
+### Performance Monitoring
+```typescript
+import { performanceMonitor } from '@/shared/utils/performance';
+
+await performanceMonitor.measure('data-fetch', async () => {
+  return await fetchData();
+});
+```
+
+## Middleware
 
 ```typescript
-import { Loader } from '@/shared/components/loading';
-import { useDebounce } from '@/shared/hooks';
-import { formatDate } from '@/shared/utils/formatting';
+import { 
+  withErrorHandling,
+  validateQueryParams,
+  paginatedResponse,
+  AppError
+} from '@/shared/middleware';
 ```
 
+## Contexts
+
+```typescript
+import { 
+  ToastProvider, 
+  useToastContext,
+  ThemeProvider,
+  useThemeContext
+} from '@/shared/contexts';
+```
+
+## Usage Examples
+
+### Form with Validation
+```tsx
+const { values, errors, handleChange, handleSubmit } = useForm({
+  initialValues: { email: '', password: '' },
+  onSubmit: async (values) => {
+    await login(values);
+  },
+  validate: (values) => {
+    const errors: any = {};
+    if (!isEmail(values.email)) errors.email = 'Invalid email';
+    if (values.password.length < 8) errors.password = 'Too short';
+    return errors;
+  }
+});
+```
+
+### Async Data Fetching
+```tsx
+const { execute, data, isLoading, error } = useAsync(fetchUsers);
+
+useEffect(() => {
+  execute();
+}, []);
+
+if (isLoading) return <Spinner />;
+if (error) return <ErrorDisplay message={error.message} />;
+return <UserList users={data} />;
+```
+
+### Toast Notifications
+```tsx
+const { addToast } = useToastContext();
+
+addToast({
+  message: 'Profile updated successfully!',
+  variant: 'success',
+  duration: 3000
+});
+```
+
+## Guidelines
+
+1. **Components**: Only add truly reusable components
+2. **Hooks**: Follow React hooks naming conventions (`use*`)
+3. **Utils**: Pure functions with no side effects
+4. **Types**: Use TypeScript for complete type safety
+5. **Testing**: Write comprehensive tests for all shared code
+6. **Documentation**: Document all public APIs with JSDoc comments
+7. **Examples**: Provide usage examples for complex utilities
+
+## Testing
+
+All shared code should have corresponding unit tests:
+
+```bash
+npm test src/shared
+```
+
+## Migration
+
+See [MIGRATION_GUIDE.md](/docs/MIGRATION_GUIDE.md) for guidance on migrating from legacy components to the new shared system.
