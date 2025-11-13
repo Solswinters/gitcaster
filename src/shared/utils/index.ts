@@ -52,3 +52,6 @@ export * from './date';
 // Number utilities
 export * from './number';
 
+// Color utilities
+export * from './color';
+
