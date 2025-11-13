@@ -24,6 +24,8 @@ export * from './useMediaQuery';
 export * from './useClickOutside';
 export * from './useOnScreen';
 export * from './useWindowSize';
+export * from './useEventListener';
+export * from './useKeyPress';
 
 // Utility hooks
 export * from './useCopyToClipboard';
