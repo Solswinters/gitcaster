@@ -355,21 +355,30 @@ PORT=3001 npm run dev
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how to contribute:
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and development process.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+### Quick Start
+
+```bash
+# Clone and setup
+git clone https://github.com/Solswinters/gitcaster.git
+cd gitcaster
+./scripts/setup-dev.sh
+
+# Start developing
+npm run dev
+```
 
 ### Development Guidelines
 
+- Follow [Contributing Guidelines](CONTRIBUTING.md)
+- Use [Conventional Commits](https://www.conventionalcommits.org/)
+- Write tests for new features
 - Follow TypeScript best practices
-- Use Tailwind CSS for styling (no inline styles)
-- Write descriptive commit messages
-- Test authentication flows with both wallets and email/social
-- Ensure Prisma migrations are included
+- Use NativeWind (Tailwind) for styling
+- Keep files under 500 lines
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 🔒 Security
 
