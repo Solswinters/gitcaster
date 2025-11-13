@@ -16,3 +16,9 @@ export * from './profile';
 // Search feature
 export * from './search';
 
+// Analytics feature
+export * from './analytics';
+
+// Collaboration feature
+export * from './collaboration';
+
