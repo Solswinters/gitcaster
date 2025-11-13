@@ -46,3 +46,6 @@ export * from './performance';
 // Storage utilities
 export * from './storage';
 
+// Date utilities
+export * from './date';
+
