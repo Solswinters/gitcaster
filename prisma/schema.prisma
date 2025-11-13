@@ -31,7 +31,7 @@ model Profile {
   slug               String  @unique
   displayName        String?
   bio                String? @db.Text
-  bioHtml            String? @db.Text // Rich text HTML version
+  bioHtml            String? @db.Text
   avatarUrl          String?
   location           String?
   company            String?
@@ -50,7 +50,7 @@ model Profile {
 
   // Search optimization fields
   searchTags        String[]  @default([])
-  experienceLevel   String? // 'junior' | 'mid' | 'senior' | 'lead'
+  experienceLevel   String?
   yearsOfExperience Int?
   isFeatured        Boolean   @default(false)
   featuredAt        DateTime?
@@ -69,6 +69,7 @@ model Profile {
   certifications Certification[]
   projects       Project[]
   theme          ProfileTheme?    @relation(fields: [themeId], references: [id])
+  views          ProfileView[]
 
   @@index([slug])
   @@index([isPublic])
@@ -76,6 +77,25 @@ model Profile {
   @@index([experienceLevel])
   @@index([isFeatured])
   @@index([lastActiveAt])
+}
+
+model ProfileView {
+  id            String   @id @default(cuid())
+  profileId     String
+  viewerCountry String?
+  viewerRegion  String?
+  viewerCity    String?
+  referrer      String?
+  userAgent     String?
+  ipHash        String? // Hashed IP for privacy
+  createdAt     DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([createdAt])
+  @@index([viewerCountry])
+  @@index([ipHash])
 }
 
 model WorkExperience {
@@ -168,28 +188,19 @@ model ProfileTheme {
   isPreset Boolean @default(false)
   isPublic Boolean @default(false)
 
-  // Color scheme
   primaryColor    String @default("#3b82f6")
   secondaryColor  String @default("#8b5cf6")
   accentColor     String @default("#06b6d4")
   backgroundColor String @default("#ffffff")
   textColor       String @default("#1f2937")
 
-  // Layout
-  layout String @default("default") // 'default' | 'two-column' | 'grid' | 'minimal'
+  layout            String  @default("default")
+  fontFamily        String  @default("Inter")
+  fontSize          String  @default("base")
+  backgroundPattern String?
+  backgroundImage   String?
+  customCSS         String? @db.Text
 
-  // Typography
-  fontFamily String @default("Inter")
-  fontSize   String @default("base") // 'sm' | 'base' | 'lg'
-
-  // Background
-  backgroundPattern String? // 'none' | 'dots' | 'grid' | 'gradient'
-  backgroundImage   String? // URL to custom background
-
-  // Custom CSS
-  customCSS String? @db.Text
-
-  // Metadata
   createdBy  String?
   usageCount Int     @default(0)
 
@@ -217,7 +228,6 @@ model GitHubStats {
   topRepos          Json?
   contributionGraph Json?
 
-  // Keep old columns for backwards compatibility
   lastSyncedAt       DateTime?
   publicGists        Int?
   recentActivity     Json?
@@ -239,8 +249,8 @@ model GitHubStats {
 model SyncLog {
   id        String   @id @default(cuid())
   userId    String
-  syncType  String // 'github' | 'talent-protocol'
-  status    String // 'success' | 'error'
+  syncType  String
+  status    String
   message   String?
   createdAt DateTime @default(now())
 
@@ -251,7 +261,7 @@ model SyncLog {
 model Skill {
   id        String   @id @default(cuid())
   name      String   @unique
-  category  String // 'language' | 'framework' | 'tool' | 'platform'
+  category  String
   iconUrl   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -266,7 +276,7 @@ model ProfileSkill {
   id          String    @id @default(cuid())
   profileId   String
   skillId     String
-  proficiency Int // 1-5 scale or percentage
+  proficiency Int
   yearsUsed   Float?
   lastUsed    DateTime?
   verified    Boolean   @default(false)
