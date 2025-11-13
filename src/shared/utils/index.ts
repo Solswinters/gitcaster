@@ -37,3 +37,6 @@ export * from './logger';
 // Analytics utilities
 export * from './analytics';
 
+// Cache utilities
+export * from './cache';
+
