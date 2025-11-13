@@ -18,4 +18,6 @@ export * from './Checkbox';
 export * from './Radio';
 export * from './Switch';
 export * from './Tabs';
+export * from './Alert';
+export * from './Tooltip';
 
