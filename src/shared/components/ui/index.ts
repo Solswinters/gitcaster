@@ -14,4 +14,6 @@ export * from './Card';
 export * from './Modal';
 export * from './Select';
 export * from './Textarea';
+export * from './Checkbox';
+export * from './Radio';
 
