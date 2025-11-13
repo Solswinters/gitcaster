@@ -1,273 +1,189 @@
 /**
  * Search Helper Utilities
- * 
- * Helper functions for search operations
  */
 
-import { SearchFilters, SearchQuery, SearchResult } from '../types/search.types';
-import { UserProfile } from '@/shared/types';
+import type { SearchFilters, SearchResult } from '../types/search.types';
 
 /**
- * Build search query from filters
+ * Build query string from search filters
  */
-export function buildSearchQuery(
-  query: string,
-  filters?: SearchFilters,
-  page = 1,
-  limit = 20
-): SearchQuery {
+export function buildSearchQuery(filters: SearchFilters): string {
+  const params = new URLSearchParams();
+
+  if (filters.query) params.set('q', filters.query);
+  if (filters.skills?.length) params.set('skills', filters.skills.join(','));
+  if (filters.languages?.length) params.set('languages', filters.languages.join(','));
+  if (filters.location) params.set('location', filters.location);
+  if (filters.experienceLevel?.length) {
+    params.set('experienceLevel', filters.experienceLevel.join(','));
+  }
+  if (filters.minYears !== null && filters.minYears !== undefined) {
+    params.set('minYears', filters.minYears.toString());
+  }
+  if (filters.maxYears !== null && filters.maxYears !== undefined) {
+    params.set('maxYears', filters.maxYears.toString());
+  }
+  if (filters.minScore !== null && filters.minScore !== undefined) {
+    params.set('minScore', filters.minScore.toString());
+  }
+  if (filters.featured) params.set('featured', 'true');
+  if (filters.hasGitHub) params.set('hasGitHub', 'true');
+  if (filters.hasTalentProtocol) params.set('hasTalentProtocol', 'true');
+
+  return params.toString();
+}
+
+/**
+ * Parse query string into search filters
+ */
+export function parseSearchQuery(queryString: string): Partial<SearchFilters> {
+  const params = new URLSearchParams(queryString);
+  
   return {
-    query,
-    filters,
-    page,
-    limit,
-    sort: { field: 'relevance', direction: 'desc' },
+    query: params.get('q') || undefined,
+    skills: params.get('skills')?.split(',').filter(Boolean) || undefined,
+    languages: params.get('languages')?.split(',').filter(Boolean) || undefined,
+    location: params.get('location') || undefined,
+    experienceLevel: params.get('experienceLevel')?.split(',').filter(Boolean) || undefined,
+    minYears: params.get('minYears') ? parseInt(params.get('minYears')!) : undefined,
+    maxYears: params.get('maxYears') ? parseInt(params.get('maxYears')!) : undefined,
+    minScore: params.get('minScore') ? parseFloat(params.get('minScore')!) : undefined,
+    featured: params.get('featured') === 'true',
+    hasGitHub: params.get('hasGitHub') === 'true',
+    hasTalentProtocol: params.get('hasTalentProtocol') === 'true',
   };
-}
-
-/**
- * Filter profiles by languages
- */
-export function filterByLanguages(
-  profiles: UserProfile[],
-  languages: string[]
-): UserProfile[] {
-  if (languages.length === 0) return profiles;
-
-  return profiles.filter(profile => {
-    const profileLanguages =
-      profile.githubStats?.languages.map(l => l.language.toLowerCase()) || [];
-    return languages.some(lang =>
-      profileLanguages.includes(lang.toLowerCase())
-    );
-  });
-}
-
-/**
- * Filter profiles by star range
- */
-export function filterByStars(
-  profiles: UserProfile[],
-  min?: number,
-  max?: number
-): UserProfile[] {
-  return profiles.filter(profile => {
-    const stars = profile.githubStats?.totalStars || 0;
-    if (min !== undefined && stars < min) return false;
-    if (max !== undefined && stars > max) return false;
-    return true;
-  });
-}
-
-/**
- * Filter profiles by repository count
- */
-export function filterByRepos(
-  profiles: UserProfile[],
-  min?: number,
-  max?: number
-): UserProfile[] {
-  return profiles.filter(profile => {
-    const repos = profile.githubStats?.publicRepos || 0;
-    if (min !== undefined && repos < min) return false;
-    if (max !== undefined && repos > max) return false;
-    return true;
-  });
-}
-
-/**
- * Filter profiles by location
- */
-export function filterByLocation(
-  profiles: UserProfile[],
-  location: string
-): UserProfile[] {
-  if (!location) return profiles;
-
-  const searchTerm = location.toLowerCase();
-  return profiles.filter(profile =>
-    profile.location?.toLowerCase().includes(searchTerm)
-  );
-}
-
-/**
- * Sort profiles by field
- */
-export function sortProfiles(
-  profiles: UserProfile[],
-  field: 'stars' | 'repos' | 'commits' | 'talentScore',
-  direction: 'asc' | 'desc' = 'desc'
-): UserProfile[] {
-  const sorted = [...profiles].sort((a, b) => {
-    let aValue = 0;
-    let bValue = 0;
-
-    switch (field) {
-      case 'stars':
-        aValue = a.githubStats?.totalStars || 0;
-        bValue = b.githubStats?.totalStars || 0;
-        break;
-      case 'repos':
-        aValue = a.githubStats?.publicRepos || 0;
-        bValue = b.githubStats?.publicRepos || 0;
-        break;
-      case 'commits':
-        aValue = a.githubStats?.totalCommits || 0;
-        bValue = b.githubStats?.totalCommits || 0;
-        break;
-      case 'talentScore':
-        aValue = a.talentScore || 0;
-        bValue = b.talentScore || 0;
-        break;
-    }
-
-    return direction === 'desc' ? bValue - aValue : aValue - bValue;
-  });
-
-  return sorted;
 }
 
 /**
  * Calculate search relevance score
  */
-export function calculateRelevance(profile: UserProfile, query: string): number {
+export function calculateRelevanceScore(
+  result: any,
+  filters: SearchFilters
+): number {
   let score = 0;
-  const searchTerm = query.toLowerCase();
 
-  // Exact matches get highest score
-  if (profile.displayName?.toLowerCase() === searchTerm) score += 100;
-  if (profile.githubUsername?.toLowerCase() === searchTerm) score += 100;
+  // Query match in name/bio (50 points)
+  if (filters.query) {
+    const query = filters.query.toLowerCase();
+    if (result.name?.toLowerCase().includes(query)) score += 50;
+    if (result.bio?.toLowerCase().includes(query)) score += 30;
+  }
 
-  // Partial matches get medium score
-  if (profile.displayName?.toLowerCase().includes(searchTerm)) score += 50;
-  if (profile.githubUsername?.toLowerCase().includes(searchTerm)) score += 50;
-  if (profile.bio?.toLowerCase().includes(searchTerm)) score += 30;
-  if (profile.company?.toLowerCase().includes(searchTerm)) score += 20;
-  if (profile.location?.toLowerCase().includes(searchTerm)) score += 10;
+  // Skill matches (10 points each)
+  if (filters.skills?.length) {
+    const matchingSkills = result.skills?.filter((s: any) =>
+      filters.skills?.includes(s.name)
+    ).length || 0;
+    score += matchingSkills * 10;
+  }
 
-  // Language match
-  const languages =
-    profile.githubStats?.languages.map(l => l.language.toLowerCase()) || [];
-  if (languages.some(lang => lang.includes(searchTerm))) {
-    score += 40;
+  // Language matches (5 points each)
+  if (filters.languages?.length) {
+    const matchingLangs = result.languages?.filter((l: any) =>
+      filters.languages?.includes(l.name)
+    ).length || 0;
+    score += matchingLangs * 5;
+  }
+
+  // Location match (20 points)
+  if (filters.location && result.location?.toLowerCase().includes(filters.location.toLowerCase())) {
+    score += 20;
+  }
+
+  // Experience level match (15 points)
+  if (filters.experienceLevel?.includes(result.experienceLevel)) {
+    score += 15;
+  }
+
+  // GitHub presence (10 points)
+  if (filters.hasGitHub && result.githubUsername) {
+    score += 10;
+  }
+
+  // Talent Protocol (10 points)
+  if (filters.hasTalentProtocol && result.talentPassportId) {
+    score += 10;
   }
 
   return score;
 }
 
 /**
- * Highlight search term in text
+ * Highlight search terms in text
  */
-export function highlightMatch(text: string, query: string): string {
+export function highlightSearchTerms(text: string, query: string): string {
   if (!query || !text) return text;
 
-  const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
-}
+  const terms = query.toLowerCase().split(' ').filter(Boolean);
+  let result = text;
 
-/**
- * Escape special regex characters
- */
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
- * Generate search suggestions from profiles
- */
-export function generateSuggestions(
-  profiles: UserProfile[],
-  query: string,
-  limit = 5
-): string[] {
-  const suggestions = new Set<string>();
-  const searchTerm = query.toLowerCase();
-
-  profiles.forEach(profile => {
-    // Username suggestions
-    if (profile.githubUsername?.toLowerCase().includes(searchTerm)) {
-      suggestions.add(profile.githubUsername);
-    }
-
-    // Display name suggestions
-    if (profile.displayName?.toLowerCase().includes(searchTerm)) {
-      suggestions.add(profile.displayName);
-    }
-
-    // Language suggestions
-    profile.githubStats?.languages.forEach(lang => {
-      if (lang.language.toLowerCase().includes(searchTerm)) {
-        suggestions.add(lang.language);
-      }
-    });
-
-    // Location suggestions
-    if (profile.location?.toLowerCase().includes(searchTerm)) {
-      suggestions.add(profile.location);
-    }
+  terms.forEach(term => {
+    const regex = new RegExp(`(${term})`, 'gi');
+    result = result.replace(regex, '<mark>$1</mark>');
   });
 
-  return Array.from(suggestions).slice(0, limit);
+  return result;
 }
 
 /**
- * Parse search query for filters
+ * Validate search filters
  */
-export function parseSearchQuery(query: string): {
-  cleanQuery: string;
-  filters: Partial<SearchFilters>;
-} {
-  const filters: Partial<SearchFilters> = {};
-  let cleanQuery = query;
+export function validateSearchFilters(filters: SearchFilters): string[] {
+  const errors: string[] = [];
 
-  // Parse language filter: lang:javascript
-  const langMatch = query.match(/lang:(\w+)/i);
-  if (langMatch) {
-    filters.languages = [langMatch[1]];
-    cleanQuery = cleanQuery.replace(langMatch[0], '').trim();
+  if (filters.minYears !== null && filters.minYears !== undefined && filters.minYears < 0) {
+    errors.push('Minimum years must be non-negative');
   }
 
-  // Parse location filter: location:usa
-  const locationMatch = query.match(/location:([^\s]+)/i);
-  if (locationMatch) {
-    filters.location = locationMatch[1];
-    cleanQuery = cleanQuery.replace(locationMatch[0], '').trim();
+  if (filters.maxYears !== null && filters.maxYears !== undefined && filters.maxYears < 0) {
+    errors.push('Maximum years must be non-negative');
   }
 
-  // Parse stars filter: stars:>100
-  const starsMatch = query.match(/stars:(>|<)(\d+)/i);
-  if (starsMatch) {
-    const operator = starsMatch[1];
-    const value = parseInt(starsMatch[2]);
-    if (operator === '>') filters.minStars = value;
-    if (operator === '<') filters.maxStars = value;
-    cleanQuery = cleanQuery.replace(starsMatch[0], '').trim();
+  if (
+    filters.minYears !== null && filters.minYears !== undefined &&
+    filters.maxYears !== null && filters.maxYears !== undefined &&
+    filters.minYears > filters.maxYears
+  ) {
+    errors.push('Minimum years cannot exceed maximum years');
   }
 
-  return { cleanQuery, filters };
+  if (filters.minScore !== null && filters.minScore !== undefined) {
+    if (filters.minScore < 0 || filters.minScore > 100) {
+      errors.push('Score must be between 0 and 100');
+    }
+  }
+
+  return errors;
 }
 
 /**
- * Paginate search results
+ * Get popular search suggestions
  */
-export function paginateResults<T>(
-  results: T[],
-  page: number,
-  limit: number
-): {
-  items: T[];
-  total: number;
-  hasMore: boolean;
-} {
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  const items = results.slice(start, end);
+export function getPopularSearchTerms(): string[] {
+  return [
+    'React Developer',
+    'TypeScript Expert',
+    'Full Stack Engineer',
+    'Frontend Developer',
+    'Backend Developer',
+    'DevOps Engineer',
+    'Machine Learning',
+    'Smart Contracts',
+    'Web3 Developer',
+    'Mobile Developer',
+  ];
+}
 
-  return {
-    items,
-    total: results.length,
-    hasMore: end < results.length,
-  };
+/**
+ * Format search results count
+ */
+export function formatResultsCount(count: number): string {
+  if (count === 0) return 'No results';
+  if (count === 1) return '1 result';
+  if (count < 1000) return `${count} results`;
+  if (count < 1000000) return `${(count / 1000).toFixed(1)}K results`;
+  return `${(count / 1000000).toFixed(1)}M results`;
 }
 
 /**
@@ -276,39 +192,8 @@ export function paginateResults<T>(
 export function deduplicateResults(results: SearchResult[]): SearchResult[] {
   const seen = new Set<string>();
   return results.filter(result => {
-    const id = result.profile.id;
-    if (seen.has(id)) return false;
-    seen.add(id);
+    if (seen.has(result.id)) return false;
+    seen.add(result.id);
     return true;
   });
 }
-
-/**
- * Merge and sort search results
- */
-export function mergeSearchResults(
-  results1: SearchResult[],
-  results2: SearchResult[]
-): SearchResult[] {
-  const merged = [...results1, ...results2];
-  const deduplicated = deduplicateResults(merged);
-  return deduplicated.sort((a, b) => b.score - a.score);
-}
-
-/**
- * Filter empty queries
- */
-export function isValidQuery(query: string): boolean {
-  return query.trim().length >= 2;
-}
-
-/**
- * Format search count
- */
-export function formatSearchCount(count: number): string {
-  if (count === 0) return 'No results';
-  if (count === 1) return '1 result';
-  if (count < 1000) return `${count} results`;
-  return `${(count / 1000).toFixed(1)}K results`;
-}
-
