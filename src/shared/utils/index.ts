@@ -49,3 +49,6 @@ export * from './storage';
 // Date utilities
 export * from './date';
 
+// Number utilities
+export * from './number';
+
