@@ -40,3 +40,9 @@ export * from './analytics';
 // Cache utilities
 export * from './cache';
 
+// Performance utilities
+export * from './performance';
+
+// Storage utilities
+export * from './storage';
+
