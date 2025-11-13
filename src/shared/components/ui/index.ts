@@ -22,4 +22,6 @@ export * from './Alert';
 export * from './Tooltip';
 export * from './Dropdown';
 export * from './Breadcrumbs';
+export * from './Table';
+export * from './Pagination';
 
