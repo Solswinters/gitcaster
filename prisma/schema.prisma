@@ -30,7 +30,8 @@ model Profile {
   userId             String  @unique
   slug               String  @unique
   displayName        String?
-  bio                String?
+  bio                String? @db.Text
+  bioHtml            String? @db.Text // Rich text HTML version
   avatarUrl          String?
   location           String?
   company            String?
@@ -39,6 +40,13 @@ model Profile {
   talentScore        Float?
   talentPassportData Json?
   viewCount          Int     @default(0)
+
+  // Contact information
+  email    String?
+  twitter  String?
+  linkedin String?
+  github   String?
+  calendly String?
 
   // Search optimization fields
   searchTags        String[]  @default([])
@@ -54,9 +62,13 @@ model Profile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  skills ProfileSkill[]
-  theme  ProfileTheme?  @relation(fields: [themeId], references: [id])
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills         ProfileSkill[]
+  workExperience WorkExperience[]
+  education      Education[]
+  certifications Certification[]
+  projects       Project[]
+  theme          ProfileTheme?    @relation(fields: [themeId], references: [id])
 
   @@index([slug])
   @@index([isPublic])
@@ -64,6 +76,90 @@ model Profile {
   @@index([experienceLevel])
   @@index([isFeatured])
   @@index([lastActiveAt])
+}
+
+model WorkExperience {
+  id          String    @id @default(cuid())
+  profileId   String
+  company     String
+  position    String
+  description String?   @db.Text
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  order       Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([order])
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  profileId   String
+  institution String
+  degree      String
+  field       String?
+  description String?   @db.Text
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  order       Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([order])
+}
+
+model Certification {
+  id            String    @id @default(cuid())
+  profileId     String
+  name          String
+  issuer        String
+  issueDate     DateTime
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  profileId   String
+  name        String
+  description String?   @db.Text
+  url         String?
+  repoUrl     String?
+  imageUrl    String?
+  tags        String[]  @default([])
+  startDate   DateTime?
+  endDate     DateTime?
+  isFeatured  Boolean   @default(false)
+  order       Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([isFeatured])
+  @@index([order])
 }
 
 model ProfileTheme {
