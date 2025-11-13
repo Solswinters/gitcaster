@@ -20,4 +20,6 @@ export * from './Switch';
 export * from './Tabs';
 export * from './Alert';
 export * from './Tooltip';
+export * from './Dropdown';
+export * from './Breadcrumbs';
 
