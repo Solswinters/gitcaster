@@ -34,3 +34,6 @@ export * from './overlays';
 // Display Components
 export * from './display';
 
+// Widget Components
+export * from './widgets';
+
