@@ -76,3 +76,6 @@ export * from './json';
 // Regex utilities
 export * from './regex';
 
+// Query utilities
+export * from './query';
+
