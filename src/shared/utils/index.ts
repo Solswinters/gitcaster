@@ -94,3 +94,6 @@ export * from './responsive';
 // SEO utilities
 export * from './seo';
 
+// Security utilities
+export * from './security';
+
