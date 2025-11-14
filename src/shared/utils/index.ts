@@ -85,3 +85,6 @@ export * from './animation';
 // Clipboard utilities
 export * from './clipboard';
 
+// Debounce utilities
+export * from './debounce';
+
