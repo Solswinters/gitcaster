@@ -61,3 +61,6 @@ export * from './dom';
 // Math utilities
 export * from './math';
 
+// Crypto utilities
+export * from './crypto';
+
