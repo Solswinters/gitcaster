@@ -70,3 +70,6 @@ export * from './browser';
 // File utilities
 export * from './file';
 
+// JSON utilities
+export * from './json';
+
