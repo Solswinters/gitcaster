@@ -73,3 +73,6 @@ export * from './file';
 // JSON utilities
 export * from './json';
 
+// Regex utilities
+export * from './regex';
+
