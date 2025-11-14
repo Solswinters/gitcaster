@@ -79,3 +79,6 @@ export * from './regex';
 // Query utilities
 export * from './query';
 
+// Animation utilities
+export * from './animation';
+
