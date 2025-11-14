@@ -82,3 +82,6 @@ export * from './query';
 // Animation utilities
 export * from './animation';
 
+// Clipboard utilities
+export * from './clipboard';
+
