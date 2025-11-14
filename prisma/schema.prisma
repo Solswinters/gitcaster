@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,298 +11,79 @@ datasource db {
 }
 
 model User {
-  id                String  @id @default(cuid())
-  walletAddress     String? @unique
-  githubId          String? @unique
-  githubUsername    String? @unique
-  githubAccessToken String?
-  email             String? @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile     Profile?
-  githubStats GitHubStats[]
-
-  @@index([walletAddress])
-  @@index([githubUsername])
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  githubId      String?   @unique
+  githubLogin   String?
+  walletAddress String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  profile       Profile?
+  sessions      Session[]
+  
+  @@map("users")
 }
 
 model Profile {
-  id                 String  @id @default(cuid())
-  userId             String  @unique
-  slug               String  @unique
-  displayName        String?
-  bio                String? @db.Text
-  bioHtml            String? @db.Text
-  avatarUrl          String?
-  location           String?
-  company            String?
-  website            String?
-  isPublic           Boolean @default(true)
-  talentScore        Float?
-  talentPassportData Json?
-  viewCount          Int     @default(0)
-
-  // Contact information
-  email    String?
-  twitter  String?
-  linkedin String?
-  github   String?
-  calendly String?
-
-  // Search optimization fields
-  searchTags        String[]  @default([])
-  experienceLevel   String?
-  yearsOfExperience Int?
-  isFeatured        Boolean   @default(false)
-  featuredAt        DateTime?
-  lastActiveAt      DateTime?
-
-  // Theme customization
-  themeId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  skills         ProfileSkill[]
-  workExperience WorkExperience[]
-  education      Education[]
-  certifications Certification[]
-  projects       Project[]
-  theme          ProfileTheme?    @relation(fields: [themeId], references: [id])
-  views          ProfileView[]
-
-  @@index([slug])
-  @@index([isPublic])
-  @@index([location])
-  @@index([experienceLevel])
-  @@index([isFeatured])
-  @@index([lastActiveAt])
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  bio             String?
+  location        String?
+  website         String?
+  twitter         String?
+  talentScore     Int?
+  githubStats     Json?
+  customData      Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("profiles")
 }
 
-model ProfileView {
-  id            String   @id @default(cuid())
-  profileId     String
-  viewerCountry String?
-  viewerRegion  String?
-  viewerCity    String?
-  referrer      String?
-  userAgent     String?
-  ipHash        String? // Hashed IP for privacy
-  createdAt     DateTime @default(now())
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@index([profileId])
-  @@index([createdAt])
-  @@index([viewerCountry])
-  @@index([ipHash])
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  sessionToken String   @unique
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
 }
 
-model WorkExperience {
-  id          String    @id @default(cuid())
-  profileId   String
-  company     String
-  position    String
-  description String?   @db.Text
-  location    String?
-  startDate   DateTime
-  endDate     DateTime?
-  isCurrent   Boolean   @default(false)
-  order       Int       @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@index([profileId])
-  @@index([order])
-}
-
-model Education {
-  id          String    @id @default(cuid())
-  profileId   String
-  institution String
-  degree      String
-  field       String?
-  description String?   @db.Text
-  startDate   DateTime
-  endDate     DateTime?
-  isCurrent   Boolean   @default(false)
-  order       Int       @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@index([profileId])
-  @@index([order])
-}
-
-model Certification {
-  id            String    @id @default(cuid())
-  profileId     String
-  name          String
-  issuer        String
-  issueDate     DateTime
-  expiryDate    DateTime?
-  credentialId  String?
-  credentialUrl String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@index([profileId])
-}
-
-model Project {
-  id          String    @id @default(cuid())
-  profileId   String
+model Repository {
+  id          String   @id @default(cuid())
+  githubId    String   @unique
   name        String
-  description String?   @db.Text
-  url         String?
-  repoUrl     String?
-  imageUrl    String?
-  tags        String[]  @default([])
-  startDate   DateTime?
-  endDate     DateTime?
-  isFeatured  Boolean   @default(false)
-  order       Int       @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@index([profileId])
-  @@index([isFeatured])
-  @@index([order])
+  fullName    String
+  description String?
+  url         String
+  language    String?
+  stars       Int      @default(0)
+  forks       Int      @default(0)
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("repositories")
 }
 
-model ProfileTheme {
-  id       String  @id @default(cuid())
-  name     String
-  isPreset Boolean @default(false)
-  isPublic Boolean @default(false)
-
-  primaryColor    String @default("#3b82f6")
-  secondaryColor  String @default("#8b5cf6")
-  accentColor     String @default("#06b6d4")
-  backgroundColor String @default("#ffffff")
-  textColor       String @default("#1f2937")
-
-  layout            String  @default("default")
-  fontFamily        String  @default("Inter")
-  fontSize          String  @default("base")
-  backgroundPattern String?
-  backgroundImage   String?
-  customCSS         String? @db.Text
-
-  createdBy  String?
-  usageCount Int     @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profiles Profile[]
-
-  @@index([isPreset])
-  @@index([isPublic])
-  @@index([usageCount])
-}
-
-model GitHubStats {
-  id                String @id @default(cuid())
-  userId            String
-  totalCommits      Int?
-  totalPRs          Int?
-  totalIssues       Int?
-  totalStars        Int?
-  publicRepos       Int?
-  followers         Int?
-  following         Int?
-  languages         Json?
-  topRepos          Json?
-  contributionGraph Json?
-
-  lastSyncedAt       DateTime?
-  publicGists        Int?
-  recentActivity     Json?
-  topRepositories    Json?
-  totalContributions Int?
-  totalForks         Int?
-
-  lastSyncAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+model Analytics {
+  id          String   @id @default(cuid())
+  userId      String
+  eventType   String
+  eventData   Json?
+  createdAt   DateTime @default(now())
+  
   @@index([userId])
-  @@index([lastSyncAt])
-}
-
-model SyncLog {
-  id        String   @id @default(cuid())
-  userId    String
-  syncType  String
-  status    String
-  message   String?
-  createdAt DateTime @default(now())
-
-  @@index([userId])
+  @@index([eventType])
   @@index([createdAt])
-}
-
-model Skill {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  category  String
-  iconUrl   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profileSkills ProfileSkill[]
-
-  @@index([category])
-  @@index([name])
-}
-
-model ProfileSkill {
-  id          String    @id @default(cuid())
-  profileId   String
-  skillId     String
-  proficiency Int
-  yearsUsed   Float?
-  lastUsed    DateTime?
-  verified    Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
-
-  @@unique([profileId, skillId])
-  @@index([profileId])
-  @@index([skillId])
-  @@index([proficiency])
-}
-
-model SearchQuery {
-  id        String   @id @default(cuid())
-  query     String
-  filters   Json?
-  results   Int      @default(0)
-  userId    String?
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-  @@index([userId])
+  @@map("analytics")
 }
