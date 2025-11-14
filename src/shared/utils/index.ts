@@ -91,3 +91,6 @@ export * from './debounce';
 // Responsive utilities
 export * from './responsive';
 
+// SEO utilities
+export * from './seo';
+
