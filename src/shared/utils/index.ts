@@ -64,3 +64,6 @@ export * from './math';
 // Crypto utilities
 export * from './crypto';
 
+// Browser utilities
+export * from './browser';
+
