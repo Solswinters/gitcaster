@@ -1,37 +1,29 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ReownProvider } from "@/lib/reown/provider";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "GitCaster - Build Your Developer Reputation",
-  description: "Showcase your GitHub activity and onchain builder score to stand out to recruiters and employers",
-  keywords: ["developer", "portfolio", "github", "web3", "hiring", "talent protocol", "blockchain"],
-  authors: [{ name: "GitCaster" }],
+  title: 'GitCaster - Showcase Your GitHub on the Blockchain',
+  description: 'Connect your GitHub profile with blockchain technology using Talent Protocol',
+  keywords: ['github', 'blockchain', 'web3', 'developer', 'talent protocol'],
+  authors: [{ name: 'GitCaster Team' }],
   openGraph: {
-    title: "GitCaster - Build Your Developer Reputation",
-    description: "Showcase your GitHub activity and onchain builder score",
-    type: "website",
+    title: 'GitCaster',
+    description: 'Showcase Your GitHub on the Blockchain',
+    type: 'website',
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <ReownProvider>
-          {children}
-        </ReownProvider>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
