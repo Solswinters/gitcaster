@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+.next
+out
+build
+dist
+
+# Coverage
+coverage
+
+# Database
+prisma/migrations
+
+# Misc
+.DS_Store
+*.pem
+.env*.local
