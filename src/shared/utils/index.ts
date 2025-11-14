@@ -67,3 +67,6 @@ export * from './crypto';
 // Browser utilities
 export * from './browser';
 
+// File utilities
+export * from './file';
+
