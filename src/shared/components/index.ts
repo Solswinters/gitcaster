@@ -19,3 +19,6 @@ export * from './feedback';
 // Layout Components
 export * from './layout';
 
+// Data Display Components
+export * from './data-display';
+
