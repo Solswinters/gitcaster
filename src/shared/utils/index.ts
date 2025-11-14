@@ -58,3 +58,6 @@ export * from './color';
 // DOM utilities
 export * from './dom';
 
+// Math utilities
+export * from './math';
+
