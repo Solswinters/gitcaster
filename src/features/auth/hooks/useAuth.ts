@@ -1,60 +1,87 @@
 /**
- * Authentication Hook
- * 
- * Custom hook for managing authentication state
+ * Authentication hook
  */
 
-'use client';
-
 import { useState, useEffect, useCallback } from 'react';
-import { authService } from '../services/authService';
-import { Session } from '@/shared/types';
+import type { User, Session } from '../types';
 
 export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const loadSession = useCallback(async () => {
+  useEffect(() => {
+    // Check for existing session
+    const sessionId = localStorage.getItem('sessionId');
+    if (sessionId) {
+      verifySession(sessionId);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const verifySession = async (sessionId: string) => {
     try {
-      setIsLoading(true);
-      setError(null);
-      const sessionData = await authService.getSession();
-      setSession(sessionData);
+      const response = await fetch(`/api/features/auth/session/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+        setSession(data.session);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load session');
-      setSession(null);
+      setError(err instanceof Error ? err : new Error('Session verification failed'));
     } finally {
-      setIsLoading(false);
+      setLoading(false);
+    }
+  };
+
+  const login = useCallback(async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/features/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      setUser(data.user);
+      setSession(data.session);
+      localStorage.setItem('sessionId', data.session.id);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Login failed'));
+      throw err;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const logout = useCallback(async () => {
     try {
-      await authService.logout();
+      if (session) {
+        await fetch(`/api/features/auth/logout/${session.id}`, { method: 'POST' });
+      }
+      setUser(null);
       setSession(null);
+      localStorage.removeItem('sessionId');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to logout');
-      throw err;
+      console.error('Logout error:', err);
     }
-  }, []);
-
-  const refreshSession = useCallback(async () => {
-    await loadSession();
-  }, [loadSession]);
-
-  useEffect(() => {
-    loadSession();
-  }, [loadSession]);
+  }, [session]);
 
   return {
+    user,
     session,
-    isAuthenticated: session?.isLoggedIn ?? false,
-    walletAddress: session?.walletAddress ?? null,
-    isLoading,
+    loading,
     error,
+    login,
     logout,
-    refreshSession,
+    isAuthenticated: !!user,
   };
 }
-
