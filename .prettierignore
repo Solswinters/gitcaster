@@ -1,21 +1,41 @@
 # Dependencies
-node_modules
+node_modules/
 .pnp
 .pnp.js
 
-# Build output
-.next
-out
-build
-dist
+# Production
+build/
+dist/
+out/
+.next/
 
-# Coverage
-coverage
+# Testing
+coverage/
 
-# Database
-prisma/migrations
+# Generated files
+.next/
+next-env.d.ts
+*.tsbuildinfo
 
-# Misc
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
 .DS_Store
-*.pem
-.env*.local
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Other
+.env
+.env.local
+.env.*.local
+*.lock
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
