@@ -1,6 +1,8 @@
-export * as Components from './components';
-export * as Hooks from './hooks';
-export * as Utils from './utils';
-export * as Types from './types';
-export * as Lib from './lib';
-export * as Config from './config';
+/**
+ * Central exports for core infrastructure
+ */
+
+export * from './utils';
+export * from './config';
+export * from './constants';
+export * from './lib';
