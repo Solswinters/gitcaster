@@ -1,18 +1,6 @@
-/**
- * GitHub Feature
- * 
- * Centralized export for GitHub integration functionality
- */
-
-// Types
-export * from './types/github.types';
-
-// Services
-export * from './services/githubService';
-
-// Utilities
-export * from './utils/githubHelpers';
-
-// Hooks
-export * from './hooks/useGitHubSync';
-
+export * from './domain';
+export * from './services';
+export * from './components';
+export * from './hooks';
+export * from './utils';
+export * from './types';
