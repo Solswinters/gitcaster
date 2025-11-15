@@ -7,5 +7,11 @@
  * @module domain
  */
 
-export {};
+// Export all entities
+export * from './entities';
 
+// Export all repository interfaces
+export * from './repositories';
+
+// Export all validators
+export * from './validators';
