@@ -1,71 +1,47 @@
 /**
- * Analytics Hooks
+ * General analytics hook
  */
 
-import { useAsync } from '@/shared/hooks/useAsync';
-import { analyticsService } from '../services/analyticsService';
-import type { AnalyticsFilter } from '../types/analytics.types';
+import { useState, useCallback } from 'react';
 
-/**
- * Hook for dashboard data
- */
-export function useDashboardData(userId: string, filter?: AnalyticsFilter) {
-  return useAsync(
-    async () => analyticsService.getDashboardData(userId, filter),
-    {
-      immediate: true,
-      onError: (error) => {
-        console.error('Failed to load dashboard data:', error);
-      },
-    }
-  );
+export interface AnalyticsEvent {
+  name: string;
+  properties?: Record<string, any>;
+  timestamp: Date;
 }
 
-/**
- * Hook for career predictions
- */
-export function usePredictions(userId: string) {
-  return useAsync(
-    async () => analyticsService.getPredictions(userId),
-    {
-      immediate: true,
-    }
-  );
-}
+export function useAnalytics() {
+  const [events, setEvents] = useState<AnalyticsEvent[]>([]);
 
-/**
- * Hook for comparison data
- */
-export function useComparison(userId: string, compareWith: string[]) {
-  return useAsync(
-    async () => analyticsService.getComparison(userId, compareWith),
-    {
-      immediate: compareWith.length > 0,
-    }
-  );
-}
+  const trackEvent = useCallback((name: string, properties?: Record<string, any>) => {
+    const event: AnalyticsEvent = {
+      name,
+      properties,
+      timestamp: new Date(),
+    };
 
-/**
- * Hook for career timeline
- */
-export function useCareerTimeline(userId: string) {
-  return useAsync(
-    async () => analyticsService.getCareerTimeline(userId),
-    {
-      immediate: true,
-    }
-  );
-}
+    setEvents((prev) => [...prev, event]);
 
-/**
- * Hook for activity heatmap
- */
-export function useActivityHeatmap(userId: string, year: number) {
-  return useAsync(
-    async () => analyticsService.getActivityHeatmap(userId, year),
-    {
-      immediate: true,
-    }
-  );
-}
+    // Send to analytics service
+    fetch('/api/analytics/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(event),
+    }).catch(console.error);
+  }, []);
 
+  const trackPageView = useCallback((path: string) => {
+    trackEvent('page_view', { path });
+  }, [trackEvent]);
+
+  const trackClick = useCallback((element: string, context?: Record<string, any>) => {
+    trackEvent('click', { element, ...context });
+  }, [trackEvent]);
+
+  return {
+    events,
+    trackEvent,
+    trackPageView,
+    trackClick,
+  };
+}
