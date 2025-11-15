@@ -1,15 +1,6 @@
-/**
- * Notifications Feature Module
- * 
- * Centralized export for notifications functionality
- */
-
-// Types
-export * from './types/notifications.types';
-
-// Services
-export * from './services/notificationsService';
-
-// Hooks
-export * from './hooks/useNotifications';
-
+export * from './domain';
+export * from './services';
+export * from './components';
+export * from './hooks';
+export * from './utils';
+export * from './types';
