@@ -1,18 +1,6 @@
-/**
- * Profile Feature
- * 
- * Centralized export for profile functionality
- */
-
-// Types
-export * from './types/profile.types';
-
-// Services
-export * from './services/profileService';
-
-// Utilities
-export * from './utils/profileHelpers';
-
-// Hooks
-export * from './hooks/useProfile';
-
+export * from './domain';
+export * from './services';
+export * from './components';
+export * from './hooks';
+export * from './utils';
+export * from './types';
