@@ -1,1 +1,1 @@
-export {};
+export { ConnectWallet } from './ConnectWallet';
