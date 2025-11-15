@@ -1,15 +1,6 @@
-/**
- * Collaboration Feature Module
- * 
- * Centralized export for collaboration functionality
- */
-
-// Types
-export * from './types/collaboration.types';
-
-// Services
-export * from './services/collaborationService';
-
-// Hooks
-export * from './hooks/useCollaboration';
-
+export * from './domain';
+export * from './services';
+export * from './components';
+export * from './hooks';
+export * from './utils';
+export * from './types';
