@@ -1,60 +1,42 @@
 /**
- * Profile Hook
- * 
- * Custom hook for managing profile data
+ * Profile data fetching hook
  */
 
-'use client';
+import { useState, useEffect } from 'react';
+import type { Profile } from '../types';
 
-import { useState, useEffect, useCallback } from 'react';
-import { profileService } from '../services/profileService';
-import { UserProfile, ProfileUpdateRequest } from '../types/profile.types';
-
-export function useProfile(slug: string) {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadProfile = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const profileData = await profileService.getProfile(slug);
-      setProfile(profileData);
-      
-      // Track view
-      await profileService.trackView(slug);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load profile');
-      setProfile(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [slug]);
-
-  const updateProfile = useCallback(async (updates: ProfileUpdateRequest) => {
-    try {
-      const updated = await profileService.updateProfile(slug, updates);
-      setProfile(updated);
-      return updated;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
-      throw err;
-    }
-  }, [slug]);
+export function useProfile(username?: string) {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (slug) {
-      loadProfile();
+    if (!username) {
+      setLoading(false);
+      return;
     }
-  }, [slug, loadProfile]);
 
-  return {
-    profile,
-    isLoading,
-    error,
-    updateProfile,
-    refreshProfile: loadProfile,
-  };
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/features/profile/${username}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile');
+        }
+
+        const data = await response.json();
+        setProfile(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [username]);
+
+  return { profile, loading, error };
 }
-
