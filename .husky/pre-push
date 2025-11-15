@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Run full test suite before push
 npm test
 
+# Run build to ensure no build errors
+npm run build
+
+echo "✅ Pre-push checks passed!"
