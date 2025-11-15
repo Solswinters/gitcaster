@@ -1,1 +1,9 @@
-export {};
+export { ProfilePageClient } from './ProfilePageClient';
+export { ProfileHeader } from './ProfileHeader';
+export { GitHubStats } from './GitHubStats';
+export { SkillsShowcase } from './SkillsShowcase';
+export { WorkExperienceSection } from './WorkExperienceSection';
+export { EducationSection } from './EducationSection';
+export { RepositoryCard } from './RepositoryCard';
+export { TalentScore } from './TalentScore';
+export { ProfileCompletionChecklist } from './ProfileCompletionChecklist';
