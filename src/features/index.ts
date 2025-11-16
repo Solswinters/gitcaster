@@ -9,6 +9,7 @@ export * as GitHub from './github';
 export * as Notifications from './notifications';
 export * as Onboarding from './onboarding';
 export * as Profile from './profile';
+export * as PWA from './pwa';
 export * as Recruiter from './recruiter';
 export * as Search from './search';
 export * as Themes from './themes';

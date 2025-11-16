@@ -6,3 +6,4 @@ export * from './theme';
 export * from './onboarding';
 export * from './notifications';
 export * from './recruiter';
+export * from './pwa';
