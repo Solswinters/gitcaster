@@ -4,3 +4,4 @@ export * from './github';
 export * from './auth';
 export * from './theme';
 export * from './onboarding';
+export * from './notifications';
