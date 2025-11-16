@@ -1,107 +1,81 @@
 /**
- * Notifications Hooks
+ * Notifications hook
  */
 
-import { useAsync } from '@/shared/hooks/useAsync';
-import { notificationsService } from '../services/notificationsService';
-import type { NotificationFilter, NotificationPreferences } from '../types/notifications.types';
-import { useInterval } from '@/shared/hooks/useInterval';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import type { Notification } from '../types';
+import { NotificationService } from '../services';
 
-/**
- * Hook for fetching notifications
- */
-export function useNotifications(filter?: NotificationFilter) {
-  return useAsync(
-    async () => notificationsService.getNotifications(filter),
-    {
-      immediate: true,
-    }
-  );
-}
-
-/**
- * Hook for notification statistics
- */
-export function useNotificationStats() {
-  return useAsync(
-    async () => notificationsService.getStats(),
-    {
-      immediate: true,
-    }
-  );
-}
-
-/**
- * Hook for notification preferences
- */
-export function useNotificationPreferences() {
-  return useAsync(
-    async () => notificationsService.getPreferences(),
-    {
-      immediate: true,
-    }
-  );
-}
-
-/**
- * Hook for notification actions
- */
-export function useNotificationActions() {
-  const { execute: markAsRead } = useAsync(
-    async (id: string) => notificationsService.markAsRead(id)
-  );
-
-  const { execute: markAllAsRead } = useAsync(
-    async () => notificationsService.markAllAsRead()
-  );
-
-  const { execute: deleteNotification } = useAsync(
-    async (id: string) => notificationsService.deleteNotification(id)
-  );
-
-  const { execute: clearAll } = useAsync(
-    async () => notificationsService.clearAll()
-  );
-
-  const { execute: updatePreferences } = useAsync(
-    async (prefs: NotificationPreferences) =>
-      notificationsService.updatePreferences(prefs)
-  );
-
-  return {
-    markAsRead,
-    markAllAsRead,
-    deleteNotification,
-    clearAll,
-    updatePreferences,
-  };
-}
-
-/**
- * Hook for real-time notifications with polling
- */
-export function useRealTimeNotifications(pollInterval: number = 30000) {
-  const [notifications, setNotifications] = useState<any[]>([]);
+export function useNotifications(userId?: string) {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    fetchNotifications();
+    fetchUnreadCount();
+  }, [userId]);
 
   const fetchNotifications = async () => {
+    if (!userId) return;
+
     try {
-      const data = await notificationsService.getNotifications();
+      setLoading(true);
+      const data = await NotificationService.getNotifications(userId);
       setNotifications(data);
-      setUnreadCount(data.filter((n) => !n.isRead).length);
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Poll for new notifications
-  useInterval(fetchNotifications, pollInterval);
+  const fetchUnreadCount = async () => {
+    if (!userId) return;
+
+    try {
+      const count = await NotificationService.getUnreadCount(userId);
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error);
+    }
+  };
+
+  const markAsRead = useCallback(async (notificationId: string) => {
+    await NotificationService.markAsRead(notificationId);
+    setNotifications(prev =>
+      prev.map(n => n.id === notificationId ? { ...n, read: true, readAt: new Date() } : n)
+    );
+    setUnreadCount(prev => Math.max(0, prev - 1));
+  }, []);
+
+  const markAllAsRead = useCallback(async () => {
+    if (!userId) return;
+
+    await NotificationService.markAllAsRead(userId);
+    setNotifications(prev =>
+      prev.map(n => ({ ...n, read: true, readAt: new Date() }))
+    );
+    setUnreadCount(0);
+  }, [userId]);
+
+  const deleteNotification = useCallback(async (notificationId: string) => {
+    await NotificationService.deleteNotification(notificationId);
+    setNotifications(prev => prev.filter(n => n.id !== notificationId));
+  }, []);
 
   return {
     notifications,
     unreadCount,
+    loading,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
     refresh: fetchNotifications,
   };
 }
-
