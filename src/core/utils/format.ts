@@ -1,50 +1,39 @@
 /**
- * Formatting utilities
+ * Legacy format utilities - re-exports from split modules
+ * @deprecated Use specific modules instead (e.g., NumberUtils, DateUtils, StringUtils)
  */
 
-export function formatDate(date: Date, format: 'short' | 'long' | 'relative' = 'short'): string {
-  if (format === 'relative') {
-    return formatRelativeTime(date);
-  }
+export {
+  formatNumber,
+  formatCurrency,
+  formatPercentage,
+  formatCompact,
+  formatBytes,
+} from './number/format';
 
-  const options: Intl.DateTimeFormatOptions = format === 'long'
-    ? { year: 'numeric', month: 'long', day: 'numeric' }
-    : { year: 'numeric', month: 'short', day: 'numeric' };
+export {
+  formatDate,
+  formatDateRelative,
+  formatDateShort,
+  formatDateLong,
+  formatTime,
+} from './date/format';
 
-  return new Intl.DateTimeFormat('en-US', options).format(date);
-}
+export {
+  truncateString,
+  truncateWords,
+  truncateMiddle,
+} from './string/truncate';
 
-export function formatRelativeTime(date: Date): string {
-  const now = Date.now();
-  const diff = now - date.getTime();
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+export {
+  capitalizeFirstLetter,
+  capitalizeWords,
+  capitalizeAll,
+} from './string/capitalize';
 
-  if (days > 365) return `${Math.floor(days / 365)} years ago`;
-  if (days > 30) return `${Math.floor(days / 30)} months ago`;
-  if (days > 0) return `${days} days ago`;
-  if (hours > 0) return `${hours} hours ago`;
-  if (minutes > 0) return `${minutes} minutes ago`;
-  return 'just now';
-}
-
-export function formatNumber(num: number, decimals: number = 0): string {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(num);
-}
-
-export function formatCurrency(amount: number, currency: string = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(amount);
-}
-
-export function formatPercentage(value: number, decimals: number = 0): string {
-  return `${formatNumber(value, decimals)}%`;
-}
-
+export {
+  toKebabCase,
+  toSnakeCase,
+  toCamelCase,
+  toPascalCase,
+} from './string/case-conversion';

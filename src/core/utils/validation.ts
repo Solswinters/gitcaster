@@ -1,37 +1,24 @@
 /**
- * Validation utilities
+ * Legacy validation utilities - re-exports from split modules
+ * @deprecated Use ValidationUtils namespace instead
  */
 
-export function isValidUrl(url: string): boolean {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-}
+export {
+  isValidEmail,
+  normalizeEmail,
+} from './validation/email';
 
-export function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+export {
+  isStrongPassword,
+  getPasswordStrength,
+} from './validation/password';
 
-export function isValidUsername(username: string): boolean {
-  return /^[a-zA-Z0-9_-]{3,20}$/.test(username);
-}
-
-export function isValidPhone(phone: string): boolean {
-  return /^\+?[1-9]\d{1,14}$/.test(phone.replace(/\s|-/g, ''));
-}
-
-export function isEmpty(value: any): boolean {
-  if (value === null || value === undefined) return true;
-  if (typeof value === 'string') return value.trim().length === 0;
-  if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === 'object') return Object.keys(value).length === 0;
-  return false;
-}
-
-export function isInRange(value: number, min: number, max: number): boolean {
-  return value >= min && value <= max;
-}
-
+export {
+  isPositiveNumber,
+  isNonEmptyString,
+  isValidUrl,
+  isWithinRange,
+  containsOnlyLetters,
+  containsOnlyNumbers,
+  isValidPhoneNumber,
+} from './validation/common';
