@@ -9,3 +9,4 @@ export * as GitHub from './github';
 export * as Notifications from './notifications';
 export * as Profile from './profile';
 export * as Search from './search';
+export * as Themes from './themes';
