@@ -4,7 +4,7 @@
  * User avatar with fallback initials
  */
 
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 interface AvatarProps {
   src?: string | null;

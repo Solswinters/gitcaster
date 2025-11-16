@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Loader, LoaderVariant, LoaderSize } from './Loader';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 interface LoadingContainerProps {
   /**

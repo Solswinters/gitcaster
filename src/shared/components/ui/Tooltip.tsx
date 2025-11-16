@@ -1,5 +1,5 @@
 import { ReactNode, useState, useRef } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 export interface TooltipProps {
   children: ReactNode;

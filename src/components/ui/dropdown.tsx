@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 import { useClickOutside } from '@/lib/hooks/use-click-outside';
 
 interface DropdownItem {

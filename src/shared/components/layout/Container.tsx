@@ -5,7 +5,7 @@
  */
 
 import { ReactNode } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 interface ContainerProps {
   children: ReactNode;

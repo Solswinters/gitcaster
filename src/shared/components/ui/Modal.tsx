@@ -1,5 +1,5 @@
 import { useEffect, Fragment, ReactNode } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 import { useClickOutside } from '@/shared/hooks/useClickOutside';
 
 export interface ModalProps {

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react';
 
 interface AlertProps {

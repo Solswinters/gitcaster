@@ -7,7 +7,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 

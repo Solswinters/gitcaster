@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 interface DividerProps {
   orientation?: 'horizontal' | 'vertical';

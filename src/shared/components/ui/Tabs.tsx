@@ -1,5 +1,5 @@
 import { useState, ReactNode } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 export interface Tab {
   id: string;

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 
 export type LoaderVariant = 'spinner' | 'dots' | 'ring' | 'bounce' | 'pulse' | 'wave';
 export type LoaderSize = 'sm' | 'md' | 'lg';

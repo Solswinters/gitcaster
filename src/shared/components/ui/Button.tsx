@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@/core/utils/cn';
 import { LoadingDots } from '../loading/Loader';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
