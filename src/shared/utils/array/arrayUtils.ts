@@ -278,6 +278,14 @@ export function insert<T>(array: T[], index: number, item: T): T[] {
 }
 
 /**
+ * Remove first occurrence of item
+ */
+export function remove<T>(array: T[], item: T): T[] {
+  const index = array.indexOf(item);
+  return index === -1 ? array : removeAt(array, index);
+}
+
+/**
  * Remove item at index
  */
 export function removeAt<T>(array: T[], index: number): T[] {
