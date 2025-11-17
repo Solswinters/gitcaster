@@ -134,6 +134,44 @@ export async function raceWithTimeout<T>(
 }
 
 /**
+ * Add timeout to a promise
+ */
+export function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout')), ms)
+    ),
+  ]);
+}
+
+/**
+ * Retry a function with exponential backoff
+ */
+export async function retry<T>(
+  fn: () => Promise<T>,
+  options: {
+    retries?: number;
+    delay?: number;
+    backoff?: number;
+  } = {}
+): Promise<T> {
+  const { retries = 3, delay: delayMs = 1000, backoff = 2 } = options;
+  
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries === 0) throw error;
+    await sleep(delayMs);
+    return retry(fn, {
+      retries: retries - 1,
+      delay: delayMs * backoff,
+      backoff,
+    });
+  }
+}
+
+/**
  * Memoize async function results
  */
 export function memoizeAsync<T extends (...args: any[]) => Promise<any>>(
