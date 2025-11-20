@@ -19,8 +19,48 @@ A powerful platform for developers to showcase their GitHub presence and connect
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Reown AppKit + SIWE
 - **Blockchain**: Wagmi v2 + Viem
+- **Smart Contracts**: Solidity on Base Network
 - **Testing**: Jest, React Testing Library, Playwright
 - **APIs**: GitHub REST & GraphQL, Talent Protocol
+
+## Smart Contract
+
+GitCaster uses an on-chain NFT system for developer achievements and credentials.
+
+### DeveloperProfileNFT Contract
+
+**Network**: Base (Chain ID: 8453)  
+**Contract Address**: `0x28c783CF53ae745936741869ad3258E1c0cF5B60`  
+**Block Explorer**: [View on BaseScan](https://basescan.org/address/0x28c783CF53ae745936741869ad3258E1c0cF5B60)
+
+**Features**:
+- 🏅 **Achievement Badges** - Mint NFTs for GitHub milestones (commits, repos, stars, etc.)
+- 🔗 **GitHub Linking** - Link GitHub usernames to Ethereum addresses on-chain
+- 🎯 **Talent Protocol Integration** - Store and verify builder scores
+- 🔒 **Soulbound Tokens** - Non-transferable credentials for verified achievements
+- 📦 **Batch Minting** - Efficiently mint multiple achievements at once
+
+**Achievement Types**:
+- `COMMITS_100` - 100 commits milestone
+- `COMMITS_1000` - 1,000 commits milestone
+- `REPOS_10` - 10 repositories created
+- `REPOS_50` - 50 repositories created
+- `STARS_100` - 100 stars received
+- `STARS_1000` - 1,000 stars received
+- `CONTRIBUTOR_10` - Contributed to 10 projects
+- `CONTRIBUTOR_50` - Contributed to 50 projects
+- `TALENT_VERIFIED` - Talent Protocol verified
+- `EARLY_ADOPTER` - Early GitCaster user
+- `BUILDER_SCORE_HIGH` - High Talent Protocol builder score
+
+**Usage**:
+```typescript
+import { DEVELOPER_PROFILE_NFT_ADDRESS, DEVELOPER_PROFILE_NFT_ABI } from './abi';
+
+// Use with wagmi/viem to interact with the contract
+```
+
+See [`abi.ts`](./abi.ts) for the complete contract ABI and configuration.
 
 ## Getting Started
 
@@ -91,6 +131,9 @@ gitcaster/
 │   │   ├── services/     # API services
 │   │   └── contexts/     # React contexts
 │   └── lib/              # Core infrastructure
+├── contracts/            # Smart contracts
+│   └── DeveloperProfileNFT.sol
+├── abi.ts                # Contract ABI and configuration
 ├── tests/                # Test files
 │   ├── unit/             # Unit tests
 │   ├── integration/      # Integration tests
@@ -121,6 +164,8 @@ gitcaster/
 - [Architecture Guide](./ARCHITECTURE.md) - System architecture and design decisions
 - [API Documentation](./docs/API.md) - API endpoints and usage
 - [Testing Guide](./docs/TESTING.md) - Testing strategies and examples
+- [Smart Contract](./contracts/DeveloperProfileNFT.sol) - On-chain achievement NFT contract
+- [Contract ABI](./abi.ts) - Contract ABI and configuration for frontend integration
 - [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
 - [Deployment Guide](./docs/DEPLOYMENT.md) - Deployment instructions
 - [Changelog](./docs/CHANGELOG.md) - Version history
