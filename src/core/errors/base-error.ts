@@ -119,3 +119,118 @@ export class TimeoutError extends AppError {
   }
 }
 
+export class NetworkError extends AppError {
+  constructor(message: string = 'Network error', metadata?: ErrorMetadata) {
+    super(message, 503, 'NETWORK_ERROR', metadata);
+  }
+}
+
+export class PaymentRequiredError extends AppError {
+  constructor(message: string = 'Payment required', metadata?: ErrorMetadata) {
+    super(message, 402, 'PAYMENT_REQUIRED', metadata);
+  }
+}
+
+export class UnprocessableEntityError extends AppError {
+  constructor(message: string = 'Unprocessable entity', metadata?: ErrorMetadata) {
+    super(message, 422, 'UNPROCESSABLE_ENTITY', metadata);
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message: string = 'Too many requests', metadata?: ErrorMetadata) {
+    super(message, 429, 'TOO_MANY_REQUESTS', metadata);
+  }
+}
+
+export class GatewayTimeoutError extends AppError {
+  constructor(message: string = 'Gateway timeout', metadata?: ErrorMetadata) {
+    super(message, 504, 'GATEWAY_TIMEOUT', metadata);
+  }
+}
+
+export class MethodNotAllowedError extends AppError {
+  constructor(message: string = 'Method not allowed', metadata?: ErrorMetadata) {
+    super(message, 405, 'METHOD_NOT_ALLOWED', metadata);
+  }
+}
+
+export class NotAcceptableError extends AppError {
+  constructor(message: string = 'Not acceptable', metadata?: ErrorMetadata) {
+    super(message, 406, 'NOT_ACCEPTABLE', metadata);
+  }
+}
+
+export class UnsupportedMediaTypeError extends AppError {
+  constructor(message: string = 'Unsupported media type', metadata?: ErrorMetadata) {
+    super(message, 415, 'UNSUPPORTED_MEDIA_TYPE', metadata);
+  }
+}
+
+export class PreconditionFailedError extends AppError {
+  constructor(message: string = 'Precondition failed', metadata?: ErrorMetadata) {
+    super(message, 412, 'PRECONDITION_FAILED', metadata);
+  }
+}
+
+/**
+ * Error factory for creating errors with consistent structure
+ */
+export class ErrorFactory {
+  static createValidationError(field: string, message: string): ValidationError {
+    return new ValidationError(message, { field });
+  }
+
+  static createNotFoundError(resource: string, id?: string): NotFoundError {
+    const message = id 
+      ? `${resource} with ID ${id} not found`
+      : `${resource} not found`;
+    return new NotFoundError(message, { resource, id });
+  }
+
+  static createAuthenticationError(reason?: string): AuthenticationError {
+    return new AuthenticationError('Authentication failed', { reason });
+  }
+
+  static createRateLimitError(limit: number, window: string): RateLimitError {
+    return new RateLimitError(`Rate limit of ${limit} requests per ${window} exceeded`, {
+      limit,
+      window,
+    });
+  }
+
+  static fromUnknown(error: unknown): AppError {
+    if (error instanceof AppError) {
+      return error;
+    }
+
+    if (error instanceof Error) {
+      return new InternalServerError(error.message, {
+        originalError: error.name,
+      });
+    }
+
+    if (typeof error === 'string') {
+      return new InternalServerError(error);
+    }
+
+    return new InternalServerError('An unknown error occurred', {
+      originalError: typeof error,
+    });
+  }
+}
+
+/**
+ * Type guard to check if error is an AppError
+ */
+export function isAppError(error: unknown): error is AppError {
+  return error instanceof AppError;
+}
+
+/**
+ * Type guard to check if error is operational
+ */
+export function isOperationalError(error: unknown): boolean {
+  return error instanceof AppError && error.isOperational;
+}
+
