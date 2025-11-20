@@ -1,102 +1,61 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+/**
+ * useAsync Hook - Handle async operations with loading and error states
+ */
+
+import { useState, useEffect, useCallback } from 'react'
+
+export interface AsyncState<T> {
+  loading: boolean
+  error: Error | null
+  data: T | null
+}
 
 export interface UseAsyncOptions {
-  immediate?: boolean;
-  onSuccess?: (data: any) => void;
-  onError?: (error: Error) => void;
+  immediate?: boolean
 }
 
-export interface UseAsyncReturn<T, Args extends any[]> {
-  execute: (...args: Args) => Promise<void>;
-  data: T | null;
-  error: Error | null;
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  reset: () => void;
-}
-
-/**
- * Custom hook for async operations
- * 
- * Manages loading, error, and success states for async functions
- * 
- * @example
- * ```tsx
- * const { execute, data, isLoading, error } = useAsync(fetchUser);
- * 
- * useEffect(() => {
- *   execute(userId);
- * }, [userId]);
- * 
- * if (isLoading) return <Spinner />;
- * if (error) return <ErrorDisplay message={error.message} />;
- * return <UserProfile user={data} />;
- * ```
- */
-export function useAsync<T = any, Args extends any[] = any[]>(
-  asyncFunction: (...args: Args) => Promise<T>,
+export function useAsync<T>(
+  asyncFunction: () => Promise<T>,
+  dependencies: any[] = [],
   options: UseAsyncOptions = {}
-): UseAsyncReturn<T, Args> {
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const isMounted = useRef(true);
+): AsyncState<T> & { execute: () => Promise<void>; reset: () => void } {
+  const { immediate = true } = options
 
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  const [state, setState] = useState<AsyncState<T>>({
+    loading: immediate,
+    error: null,
+    data: null,
+  })
 
-  const execute = useCallback(
-    async (...args: Args) => {
-      setIsLoading(true);
-      setError(null);
+  // Execute async function
+  const execute = useCallback(async () => {
+    setState({ loading: true, error: null, data: null })
 
-      try {
-        const result = await asyncFunction(...args);
-        
-        if (isMounted.current) {
-          setData(result);
-          options.onSuccess?.(result);
-        }
-      } catch (err) {
-        if (isMounted.current) {
-          const error = err as Error;
-          setError(error);
-          options.onError?.(error);
-        }
-      } finally {
-        if (isMounted.current) {
-          setIsLoading(false);
-        }
-      }
-    },
-    [asyncFunction, options]
-  );
-
-  const reset = useCallback(() => {
-    setData(null);
-    setError(null);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (options.immediate) {
-      execute([] as any);
+    try {
+      const result = await asyncFunction()
+      setState({ loading: false, error: null, data: result })
+    } catch (error) {
+      setState({ loading: false, error: error as Error, data: null })
     }
-  }, [execute, options.immediate]);
+  }, [asyncFunction])
+
+  // Reset state
+  const reset = useCallback(() => {
+    setState({ loading: false, error: null, data: null })
+  }, [])
+
+  // Execute on mount if immediate is true
+  useEffect(() => {
+    if (immediate) {
+      execute()
+    }
+  }, dependencies)
 
   return {
+    ...state,
     execute,
-    data,
-    error,
-    isLoading,
-    isSuccess: data !== null && error === null,
-    isError: error !== null,
     reset,
-  };
+  }
 }
 
+export default useAsync
