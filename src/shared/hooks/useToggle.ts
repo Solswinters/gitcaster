@@ -1,44 +1,45 @@
 import { useState, useCallback } from 'react';
 
-export interface UseToggleReturn {
-  value: boolean;
-  toggle: () => void;
-  setTrue: () => void;
-  setFalse: () => void;
-  setValue: (value: boolean) => void;
-}
-
 /**
  * Custom hook for managing boolean state with toggle functionality
- * Provides convenient methods to toggle, set true, set false
  *
  * @example
- * const { value, toggle, setTrue, setFalse } = useToggle(false);
+ * const [isOpen, toggle, setIsOpen] = useToggle(false);
  *
- * <button onClick={toggle}>Toggle</button>
- * <button onClick={setTrue}>Show</button>
- * <button onClick={setFalse}>Hide</button>
+ * @param initialValue - Initial boolean value (default: false)
+ * @returns Tuple of [value, toggle function, setValue function]
  */
-export function useToggle(initialValue: boolean = false): UseToggleReturn {
-  const [value, setValue] = useState(initialValue);
+export function useToggle(initialValue: boolean = false): [boolean, () => void, (value: boolean) => void] {
+  const [value, setValue] = useState<boolean>(initialValue);
 
   const toggle = useCallback(() => {
     setValue((prev) => !prev);
   }, []);
 
-  const setTrue = useCallback(() => {
-    setValue(true);
+  return [value, toggle, setValue];
+}
+
+/**
+ * Hook for managing multiple toggles
+ */
+export function useToggles<K extends string>(
+  initialValues: Record<K, boolean>,
+): [Record<K, boolean>, (key: K) => void, (key: K, value: boolean) => void] {
+  const [values, setValues] = useState<Record<K, boolean>>(initialValues);
+
+  const toggle = useCallback((key: K) => {
+    setValues((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
   }, []);
 
-  const setFalse = useCallback(() => {
-    setValue(false);
+  const setValue = useCallback((key: K, value: boolean) => {
+    setValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   }, []);
 
-  return {
-    value,
-    toggle,
-    setTrue,
-    setFalse,
-    setValue,
-  };
+  return [values, toggle, setValue];
 }
