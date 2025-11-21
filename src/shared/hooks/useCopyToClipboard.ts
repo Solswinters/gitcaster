@@ -1,62 +1,53 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-export interface UseCopyToClipboardResult {
-  copiedText: string | null;
-  copy: (text: string) => Promise<boolean>;
-  isCopied: boolean;
-  error: Error | null;
-}
+export type CopyStatus = 'idle' | 'copied' | 'error';
 
 /**
  * Custom hook for copying text to clipboard
- * Provides feedback on copy success/failure and tracks copied text
  *
  * @example
- * const { copy, isCopied, error } = useCopyToClipboard();
+ * const [copiedText, copyToClipboard, status] = useCopyToClipboard();
  *
- * const handleCopy = async () => {
- *   const success = await copy('Text to copy');
- *   if (success) {
- *     console.log('Copied!');
- *   }
- * };
+ * @returns Tuple of [copiedText, copyFunction, status]
  */
-export function useCopyToClipboard(resetAfter: number = 2000): UseCopyToClipboardResult {
+export function useCopyToClipboard(): [string | null, (text: string) => Promise<boolean>, CopyStatus] {
   const [copiedText, setCopiedText] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [status, setStatus] = useState<CopyStatus>('idle');
 
-  const copy = async (text: string): Promise<boolean> => {
+  const copyToClipboard = useCallback(async (text: string): Promise<boolean> => {
     if (!navigator?.clipboard) {
-      const error = new Error('Clipboard API not available');
-      setError(error);
-      console.warn(error);
+      console.warn('Clipboard not supported');
+      setStatus('error');
       return false;
     }
 
     try {
       await navigator.clipboard.writeText(text);
       setCopiedText(text);
-      setIsCopied(true);
-      setError(null);
+      setStatus('copied');
 
-      // Reset the copied state after specified time
-      if (resetAfter > 0) {
-        setTimeout(() => {
-          setIsCopied(false);
-        }, resetAfter);
-      }
+      // Reset status after 2 seconds
+      setTimeout(() => setStatus('idle'), 2000);
 
       return true;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to copy to clipboard');
-      setError(error);
-      setCopiedText(null);
-      setIsCopied(false);
-      console.warn('Failed to copy:', error);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      setStatus('error');
+
+      // Reset status after 2 seconds
+      setTimeout(() => setStatus('idle'), 2000);
+
       return false;
     }
-  };
+  }, []);
 
-  return { copiedText, copy, isCopied, error };
+  return [copiedText, copyToClipboard, status];
+}
+
+/**
+ * Hook that returns a simple copy function
+ */
+export function useCopy(): (text: string) => Promise<boolean> {
+  const [, copyToClipboard] = useCopyToClipboard();
+  return copyToClipboard;
 }
