@@ -5,69 +5,117 @@
 
 export class StringUtils {
   /**
-   * Truncate string to specified length with ellipsis
-   */
-  static truncate(str: string, length: number, suffix: string = '...'): string {
-    if (str.length <= length) return str;
-    return str.slice(0, length - suffix.length) + suffix;
-  }
-
-  /**
-   * Capitalize first letter of string
+   * Capitalize first letter
    */
   static capitalize(str: string): string {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   /**
-   * Capitalize first letter of each word
+   * Capitalize all words
    */
   static capitalizeWords(str: string): string {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
   /**
-   * Convert to title case
+   * Convert to camelCase
    */
-  static toTitleCase(str: string): string {
+  static toCamelCase(str: string): string {
     return str
+      .replace(/[-_\s]+(.)?/g, (_, char) => (char ? char.toUpperCase() : ''))
+      .replace(/^[A-Z]/, (char) => char.toLowerCase());
+  }
+
+  /**
+   * Convert to PascalCase
+   */
+  static toPascalCase(str: string): string {
+    const camel = this.toCamelCase(str);
+    return camel.charAt(0).toUpperCase() + camel.slice(1);
+  }
+
+  /**
+   * Convert to snake_case
+   */
+  static toSnakeCase(str: string): string {
+    return str
+      .replace(/([A-Z])/g, '_$1')
       .toLowerCase()
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .replace(/^_/, '');
   }
 
   /**
-   * Convert camelCase to snake_case
+   * Convert to kebab-case
    */
-  static camelToSnake(str: string): string {
-    return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`).replace(/^_/, '');
+  static toKebabCase(str: string): string {
+    return str
+      .replace(/([A-Z])/g, '-$1')
+      .toLowerCase()
+      .replace(/^-/, '');
   }
 
   /**
-   * Convert snake_case to camelCase
+   * Truncate string with ellipsis
    */
-  static snakeToCamel(str: string): string {
-    return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  static truncate(str: string, maxLength: number, suffix: string = '...'): string {
+    if (str.length <= maxLength) return str;
+    return str.substring(0, maxLength - suffix.length) + suffix;
   }
 
   /**
-   * Convert camelCase to kebab-case
+   * Truncate string at word boundary
    */
-  static camelToKebab(str: string): string {
-    return str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '');
+  static truncateWords(str: string, maxWords: number, suffix: string = '...'): string {
+    const words = str.split(/\s+/);
+    if (words.length <= maxWords) return str;
+    return words.slice(0, maxWords).join(' ') + suffix;
   }
 
   /**
-   * Convert kebab-case to camelCase
+   * Trim and collapse whitespace
    */
-  static kebabToCamel(str: string): string {
-    return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+  static normalizeWhitespace(str: string): string {
+    return str.replace(/\s+/g, ' ').trim();
   }
 
   /**
-   * Convert string to slug (URL-friendly)
+   * Remove HTML tags
+   */
+  static stripHtml(str: string): string {
+    return str.replace(/<[^>]*>/g, '');
+  }
+
+  /**
+   * Escape HTML entities
+   */
+  static escapeHtml(str: string): string {
+    const map: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    };
+    return str.replace(/[&<>"']/g, (char) => map[char]);
+  }
+
+  /**
+   * Unescape HTML entities
+   */
+  static unescapeHtml(str: string): string {
+    const map: Record<string, string> = {
+      '&amp;': '&',
+      '&lt;': '<',
+      '&gt;': '>',
+      '&quot;': '"',
+      '&#39;': "'",
+    };
+    return str.replace(/&(?:amp|lt|gt|quot|#39);/g, (entity) => map[entity]);
+  }
+
+  /**
+   * Convert string to slug
    */
   static slugify(str: string): string {
     return str
@@ -79,53 +127,7 @@ export class StringUtils {
   }
 
   /**
-   * Remove HTML tags from string
-   */
-  static stripHTML(html: string): string {
-    return html.replace(/<[^>]*>/g, '');
-  }
-
-  /**
-   * Escape HTML special characters
-   */
-  static escapeHTML(str: string): string {
-    const htmlEscapes: Record<string, string> = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#x27;',
-      '/': '&#x2F;',
-    };
-
-    return str.replace(/[&<>"'/]/g, (char) => htmlEscapes[char]);
-  }
-
-  /**
-   * Unescape HTML special characters
-   */
-  static unescapeHTML(str: string): string {
-    const htmlUnescapes: Record<string, string> = {
-      '&amp;': '&',
-      '&lt;': '<',
-      '&gt;': '>',
-      '&quot;': '"',
-      '&#x27;': "'",
-      '&#x2F;': '/',
-    };
-
-    return str.replace(/&(?:amp|lt|gt|quot|#x27|#x2F);/g, (entity) => htmlUnescapes[entity]);
-  }
-
-  /**
-   * Escape regular expression special characters
-   */
-  static escapeRegex(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
-  /**
-   * Reverse a string
+   * Reverse string
    */
   static reverse(str: string): string {
     return str.split('').reverse().join('');
@@ -142,174 +144,146 @@ export class StringUtils {
   /**
    * Count occurrences of substring
    */
-  static countOccurrences(str: string, substr: string): number {
-    if (!substr) return 0;
-    return (str.match(new RegExp(this.escapeRegex(substr), 'g')) || []).length;
+  static countOccurrences(str: string, substring: string): number {
+    if (!substring) return 0;
+    return str.split(substring).length - 1;
   }
 
   /**
-   * Replace all occurrences of search string
+   * Replace all occurrences
    */
   static replaceAll(str: string, search: string, replacement: string): string {
     return str.split(search).join(replacement);
   }
 
   /**
-   * Pad string to specified length
+   * Insert string at position
    */
-  static pad(str: string, length: number, padChar: string = ' ', right: boolean = false): string {
-    const padding = padChar.repeat(Math.max(0, length - str.length));
+  static insertAt(str: string, index: number, insertion: string): string {
+    return str.substring(0, index) + insertion + str.substring(index);
+  }
+
+  /**
+   * Remove substring
+   */
+  static remove(str: string, substring: string): string {
+    return str.split(substring).join('');
+  }
+
+  /**
+   * Check if string contains
+   */
+  static contains(str: string, substring: string, caseSensitive: boolean = true): boolean {
+    if (caseSensitive) {
+      return str.includes(substring);
+    }
+    return str.toLowerCase().includes(substring.toLowerCase());
+  }
+
+  /**
+   * Check if string starts with
+   */
+  static startsWith(str: string, prefix: string, caseSensitive: boolean = true): boolean {
+    if (caseSensitive) {
+      return str.startsWith(prefix);
+    }
+    return str.toLowerCase().startsWith(prefix.toLowerCase());
+  }
+
+  /**
+   * Check if string ends with
+   */
+  static endsWith(str: string, suffix: string, caseSensitive: boolean = true): boolean {
+    if (caseSensitive) {
+      return str.endsWith(suffix);
+    }
+    return str.toLowerCase().endsWith(suffix.toLowerCase());
+  }
+
+  /**
+   * Pad string to length
+   */
+  static pad(str: string, length: number, char: string = ' ', right: boolean = false): string {
+    const padLength = Math.max(0, length - str.length);
+    const padding = char.repeat(padLength);
     return right ? str + padding : padding + str;
   }
 
   /**
-   * Wrap string to specified width
+   * Repeat string n times
    */
-  static wordWrap(str: string, width: number): string {
-    const words = str.split(' ');
+  static repeat(str: string, count: number): string {
+    return str.repeat(count);
+  }
+
+  /**
+   * Wrap text to max width
+   */
+  static wrap(str: string, maxWidth: number): string[] {
+    const words = str.split(/\s+/);
     const lines: string[] = [];
     let currentLine = '';
 
     for (const word of words) {
-      if (currentLine.length + word.length + 1 <= width) {
-        currentLine += (currentLine ? ' ' : '') + word;
+      if ((currentLine + word).length > maxWidth) {
+        if (currentLine) lines.push(currentLine.trim());
+        currentLine = word + ' ';
       } else {
-        if (currentLine) lines.push(currentLine);
-        currentLine = word;
+        currentLine += word + ' ';
       }
     }
 
-    if (currentLine) lines.push(currentLine);
-    return lines.join('\n');
+    if (currentLine) lines.push(currentLine.trim());
+    return lines;
   }
 
   /**
-   * Extract all URLs from string
+   * Extract numbers from string
    */
-  static extractURLs(str: string): string[] {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return str.match(urlRegex) || [];
+  static extractNumbers(str: string): number[] {
+    const matches = str.match(/-?\d+\.?\d*/g);
+    return matches ? matches.map(Number) : [];
   }
 
   /**
-   * Extract all email addresses from string
+   * Extract emails from string
    */
   static extractEmails(str: string): string[] {
-    const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     return str.match(emailRegex) || [];
   }
 
   /**
-   * Remove extra whitespace
+   * Extract URLs from string
    */
-  static normalizeWhitespace(str: string): string {
-    return str.replace(/\s+/g, ' ').trim();
+  static extractUrls(str: string): string[] {
+    const urlRegex = /https?:\/\/[^\s]+/g;
+    return str.match(urlRegex) || [];
   }
 
   /**
-   * Remove all whitespace
+   * Mask string (e.g., for sensitive data)
    */
-  static removeWhitespace(str: string): string {
-    return str.replace(/\s/g, '');
-  }
-
-  /**
-   * Get initials from name
-   */
-  static getInitials(name: string, maxLength: number = 2): string {
-    return name
-      .split(/\s+/)
-      .map((word) => word.charAt(0).toUpperCase())
-      .slice(0, maxLength)
-      .join('');
-  }
-
-  /**
-   * Mask string (for sensitive data)
-   */
-  static mask(str: string, visibleStart: number = 0, visibleEnd: number = 4, maskChar: string = '*'): string {
-    if (str.length <= visibleStart + visibleEnd) return str;
-
-    const start = str.slice(0, visibleStart);
-    const end = str.slice(-visibleEnd);
-    const masked = maskChar.repeat(str.length - visibleStart - visibleEnd);
-
-    return start + masked + end;
-  }
-
-  /**
-   * Convert string to boolean
-   */
-  static toBoolean(str: string): boolean {
-    const normalized = str.toLowerCase().trim();
-    return ['true', '1', 'yes', 'on'].includes(normalized);
-  }
-
-  /**
-   * Check if string contains only digits
-   */
-  static isNumeric(str: string): boolean {
-    return /^\d+$/.test(str);
-  }
-
-  /**
-   * Check if string contains only letters
-   */
-  static isAlpha(str: string): boolean {
-    return /^[a-zA-Z]+$/.test(str);
-  }
-
-  /**
-   * Check if string contains only alphanumeric characters
-   */
-  static isAlphanumeric(str: string): boolean {
-    return /^[a-zA-Z0-9]+$/.test(str);
+  static mask(str: string, visibleChars: number = 4, maskChar: string = '*'): string {
+    if (str.length <= visibleChars) return str;
+    const visible = str.slice(-visibleChars);
+    const masked = maskChar.repeat(str.length - visibleChars);
+    return masked + visible;
   }
 
   /**
    * Generate random string
    */
-  static random(length: number = 10, charset: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'): string {
+  static random(length: number, chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'): string {
     let result = '';
     for (let i = 0; i < length; i++) {
-      result += charset.charAt(Math.floor(Math.random() * charset.length));
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
   }
 
   /**
-   * Generate UUID v4
-   */
-  static generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-
-  /**
-   * Hash string (simple hash for non-cryptographic purposes)
-   */
-  static simpleHash(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
-  }
-
-  /**
-   * Compare strings (case-insensitive)
-   */
-  static equalsIgnoreCase(str1: string, str2: string): boolean {
-    return str1.toLowerCase() === str2.toLowerCase();
-  }
-
-  /**
-   * Levenshtein distance (edit distance between two strings)
+   * Calculate Levenshtein distance
    */
   static levenshteinDistance(str1: string, str2: string): number {
     const matrix: number[][] = [];
@@ -330,7 +304,7 @@ export class StringUtils {
           matrix[i][j] = Math.min(
             matrix[i - 1][j - 1] + 1, // substitution
             matrix[i][j - 1] + 1, // insertion
-            matrix[i - 1][j] + 1, // deletion
+            matrix[i - 1][j] + 1 // deletion
           );
         }
       }
@@ -340,41 +314,103 @@ export class StringUtils {
   }
 
   /**
-   * Calculate similarity between two strings (0-1)
+   * Check similarity (0-1)
    */
   static similarity(str1: string, str2: string): number {
-    const maxLength = Math.max(str1.length, str2.length);
-    if (maxLength === 0) return 1;
-
     const distance = this.levenshteinDistance(str1, str2);
-    return 1 - distance / maxLength;
+    const maxLength = Math.max(str1.length, str2.length);
+    return maxLength === 0 ? 1 : 1 - distance / maxLength;
   }
 
   /**
-   * Find longest common substring
+   * Parse template string
    */
-  static longestCommonSubstring(str1: string, str2: string): string {
-    const matrix: number[][] = Array(str1.length + 1)
-      .fill(null)
-      .map(() => Array(str2.length + 1).fill(0));
+  static template(template: string, data: Record<string, any>): string {
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+      return data[key] !== undefined ? String(data[key]) : match;
+    });
+  }
 
-    let maxLength = 0;
-    let endIndex = 0;
+  /**
+   * Format file size
+   */
+  static formatBytes(bytes: number, decimals: number = 2): string {
+    if (bytes === 0) return '0 Bytes';
 
-    for (let i = 1; i <= str1.length; i++) {
-      for (let j = 1; j <= str2.length; j++) {
-        if (str1[i - 1] === str2[j - 1]) {
-          matrix[i][j] = matrix[i - 1][j - 1] + 1;
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-          if (matrix[i][j] > maxLength) {
-            maxLength = matrix[i][j];
-            endIndex = i;
-          }
-        }
-      }
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+  }
+
+  /**
+   * Format duration (milliseconds to human readable)
+   */
+  static formatDuration(ms: number): string {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ${hours % 24}h`;
+    if (hours > 0) return `${hours}h ${minutes % 60}m`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
+  }
+
+  /**
+   * Pluralize word
+   */
+  static pluralize(word: string, count: number): string {
+    if (count === 1) return word;
+
+    const irregular: Record<string, string> = {
+      person: 'people',
+      child: 'children',
+      man: 'men',
+      woman: 'women',
+      tooth: 'teeth',
+      foot: 'feet',
+      mouse: 'mice',
+    };
+
+    if (irregular[word.toLowerCase()]) {
+      return irregular[word.toLowerCase()];
     }
 
-    return str1.substring(endIndex - maxLength, endIndex);
+    if (word.endsWith('y') && !/[aeiou]y$/i.test(word)) {
+      return word.slice(0, -1) + 'ies';
+    }
+
+    if (/[sxz]$|[cs]h$/i.test(word)) {
+      return word + 'es';
+    }
+
+    return word + 's';
+  }
+
+  /**
+   * Abbreviate number with suffix
+   */
+  static abbreviateNumber(num: number): string {
+    if (num < 1000) return num.toString();
+    if (num < 1000000) return (num / 1000).toFixed(1) + 'K';
+    if (num < 1000000000) return (num / 1000000).toFixed(1) + 'M';
+    return (num / 1000000000).toFixed(1) + 'B';
+  }
+
+  /**
+   * Check if string is empty
+   */
+  static isEmpty(str: string | null | undefined): boolean {
+    return !str || str.trim().length === 0;
+  }
+
+  /**
+   * Check if string is not empty
+   */
+  static isNotEmpty(str: string | null | undefined): boolean {
+    return !this.isEmpty(str);
   }
 }
-
