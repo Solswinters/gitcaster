@@ -1,62 +1,97 @@
+import { useEffect, useState } from 'react';
+
 /**
- * useMediaQuery Hook
- * 
- * Track media query matches with React
+ * Custom hook for responsive design using media queries
+ * Listens to window size changes and updates state accordingly
+ *
+ * @example
+ * const isMobile = useMediaQuery('(max-width: 768px)');
+ * const isDesktop = useMediaQuery('(min-width: 1024px)');
+ * const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
  */
-
-'use client';
-
-import { useState, useEffect } from 'react';
-
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // Initialize with false for SSR compatibility
+  const [matches, setMatches] = useState<boolean>(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') {
+    // Check if window is defined (client-side)
+    if (typeof window === 'undefined') {
       return;
     }
 
     const mediaQuery = window.matchMedia(query);
+
+    // Set initial value
     setMatches(mediaQuery.matches);
 
-    const handler = (event: MediaQueryListEvent) => {
+    // Define the event handler
+    const handleChange = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
 
-    // Modern browsers
+    // Add event listener
+    // Use addEventListener for modern browsers
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handler);
-      return () => mediaQuery.removeEventListener('change', handler);
-    } 
-    // Fallback for older browsers
-    else if (mediaQuery.addListener) {
-      mediaQuery.addListener(handler);
-      return () => mediaQuery.removeListener(handler);
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handleChange);
     }
-  }, [query, mounted]);
+
+    // Cleanup
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        // Fallback for older browsers
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, [query]);
 
   return matches;
 }
 
-// Common breakpoint hooks
+/**
+ * Predefined breakpoint hooks for common use cases
+ */
+
 export function useIsMobile(): boolean {
-  return useMediaQuery('(max-width: 768px)');
+  return useMediaQuery('(max-width: 640px)');
 }
 
 export function useIsTablet(): boolean {
-  return useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
+  return useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 }
 
 export function useIsDesktop(): boolean {
   return useMediaQuery('(min-width: 1025px)');
 }
 
-export function useIsDarkMode(): boolean {
+export function useIsSmallScreen(): boolean {
+  return useMediaQuery('(max-width: 768px)');
+}
+
+export function useIsMediumScreen(): boolean {
+  return useMediaQuery('(min-width: 769px) and (max-width: 1280px)');
+}
+
+export function useIsLargeScreen(): boolean {
+  return useMediaQuery('(min-width: 1281px)');
+}
+
+export function usePrefersReducedMotion(): boolean {
+  return useMediaQuery('(prefers-reduced-motion: reduce)');
+}
+
+export function usePrefersDarkMode(): boolean {
   return useMediaQuery('(prefers-color-scheme: dark)');
 }
 
+export function useIsPortrait(): boolean {
+  return useMediaQuery('(orientation: portrait)');
+}
+
+export function useIsLandscape(): boolean {
+  return useMediaQuery('(orientation: landscape)');
+}
