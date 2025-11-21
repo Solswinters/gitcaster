@@ -1,26 +1,25 @@
 import { useState, useCallback } from 'react';
 
+export interface UseToggleReturn {
+  value: boolean;
+  toggle: () => void;
+  setTrue: () => void;
+  setFalse: () => void;
+  setValue: (value: boolean) => void;
+}
+
 /**
- * Custom hook for toggling boolean state
- * 
- * Provides convenient methods for toggling state
- * 
+ * Custom hook for managing boolean state with toggle functionality
+ * Provides convenient methods to toggle, set true, set false
+ *
  * @example
- * ```tsx
- * const [isOpen, toggle, setOpen, setClosed] = useToggle(false);
- * 
- * return (
- *   <div>
- *     <button onClick={toggle}>Toggle</button>
- *     <button onClick={setOpen}>Open</button>
- *     <button onClick={setClosed}>Close</button>
- *   </div>
- * );
- * ```
+ * const { value, toggle, setTrue, setFalse } = useToggle(false);
+ *
+ * <button onClick={toggle}>Toggle</button>
+ * <button onClick={setTrue}>Show</button>
+ * <button onClick={setFalse}>Hide</button>
  */
-export function useToggle(
-  initialValue: boolean = false
-): [boolean, () => void, () => void, () => void] {
+export function useToggle(initialValue: boolean = false): UseToggleReturn {
   const [value, setValue] = useState(initialValue);
 
   const toggle = useCallback(() => {
@@ -35,6 +34,11 @@ export function useToggle(
     setValue(false);
   }, []);
 
-  return [value, toggle, setTrue, setFalse];
+  return {
+    value,
+    toggle,
+    setTrue,
+    setFalse,
+    setValue,
+  };
 }
-
