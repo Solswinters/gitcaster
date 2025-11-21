@@ -1,5 +1,5 @@
 /**
- * Notifications Service
+ * Notifications Service with real-time updates and caching
  */
 
 import { apiClient } from '@/shared/services/apiClient';
@@ -10,7 +10,28 @@ import type {
   NotificationStats,
 } from '../types/notifications.types';
 
+interface NotificationCache {
+  notifications: Notification[];
+  timestamp: number;
+  expiresAt: number;
+}
+
+interface GroupedNotifications {
+  [key: string]: Notification[];
+}
+
+interface NotificationSubscription {
+  callback: (notification: Notification) => void;
+  filter?: (notification: Notification) => boolean;
+}
+
 export class NotificationsService {
+  private cache: NotificationCache | null = null;
+  private readonly CACHE_DURATION = 60 * 1000; // 1 minute
+  private subscriptions: Set<NotificationSubscription> = new Set();
+  private pollingInterval: number | null = null;
+  private readonly POLLING_INTERVAL = 30 * 1000; // 30 seconds
+  private eventSource: EventSource | null = null;
   /**
    * Get user notifications
    */
