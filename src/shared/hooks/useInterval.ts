@@ -1,62 +1,84 @@
-import { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
- * Custom hook for using setInterval with automatic cleanup
- * Handles component unmounting and callback updates properly
+ * Custom hook for setting up intervals with automatic cleanup
+ * Handles the common pattern of setInterval with useEffect
  *
  * @example
- * const [count, setCount] = useState(0);
- *
  * useInterval(() => {
- *   setCount(count + 1);
+ *   console.log('Runs every second');
  * }, 1000);
+ *
+ * @param callback - Function to call on each interval
+ * @param delay - Delay in milliseconds (null to pause)
  */
-export function useInterval(
-  callback: () => void,
-  delay: number | null,
-): {
-  reset: () => void;
-  clear: () => void;
-  start: () => void;
-} {
-  const callbackRef = useRef(callback);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+export function useInterval(callback: () => void, delay: number | null): void {
+  const savedCallback = useRef<() => void>();
 
-  // Update callback ref when callback changes
+  // Remember the latest callback
   useEffect(() => {
-    callbackRef.current = callback;
+    savedCallback.current = callback;
   }, [callback]);
 
   // Set up the interval
-  const start = useCallback(() => {
-    if (delay !== null) {
-      intervalRef.current = setInterval(() => {
-        callbackRef.current();
-      }, delay);
-    }
-  }, [delay]);
-
-  // Clear the interval
-  const clear = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, []);
-
-  // Reset the interval
-  const reset = useCallback(() => {
-    clear();
-    start();
-  }, [clear, start]);
-
-  // Set up interval on mount and when delay changes
   useEffect(() => {
-    if (delay !== null) {
-      start();
-      return clear;
-    }
-  }, [delay, start, clear]);
+    if (delay === null) return;
 
-  return { reset, clear, start };
+    const tick = () => {
+      savedCallback.current?.();
+    };
+
+    const id = setInterval(tick, delay);
+    return () => clearInterval(id);
+  }, [delay]);
+}
+
+/**
+ * Hook that counts up from 0 at a specified interval
+ */
+export function useCounter(delay: number = 1000): number {
+  const [count, setCount] = useState(0);
+
+  useInterval(() => {
+    setCount((c) => c + 1);
+  }, delay);
+
+  return count;
+}
+
+/**
+ * Hook for countdown timer
+ */
+export function useCountdown(initialSeconds: number, onComplete?: () => void): {
+  seconds: number;
+  isRunning: boolean;
+  start: () => void;
+  pause: () => void;
+  reset: () => void;
+} {
+  const [seconds, setSeconds] = useState(initialSeconds);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useInterval(
+    () => {
+      setSeconds((s) => {
+        if (s <= 1) {
+          setIsRunning(false);
+          onComplete?.();
+          return 0;
+        }
+        return s - 1;
+      });
+    },
+    isRunning ? 1000 : null,
+  );
+
+  const start = () => setIsRunning(true);
+  const pause = () => setIsRunning(false);
+  const reset = () => {
+    setSeconds(initialSeconds);
+    setIsRunning(false);
+  };
+
+  return { seconds, isRunning, start, pause, reset };
 }
