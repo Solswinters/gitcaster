@@ -1,5 +1,5 @@
 /**
- * Date manipulation utility functions
+ * Date manipulation and formatting utility functions
  * Provides reusable date operations
  */
 
@@ -7,15 +7,71 @@ export class DateUtils {
   /**
    * Format date to ISO string
    */
-  static toISO(date: Date): string {
+  static toISOString(date: Date): string {
     return date.toISOString();
   }
 
   /**
-   * Parse ISO string to date
+   * Format date to locale string
    */
-  static fromISO(isoString: string): Date {
-    return new Date(isoString);
+  static toLocaleString(date: Date, locale: string = 'en-US'): string {
+    return date.toLocaleString(locale);
+  }
+
+  /**
+   * Format date to date string
+   */
+  static toDateString(date: Date): string {
+    return date.toDateString();
+  }
+
+  /**
+   * Format date to time string
+   */
+  static toTimeString(date: Date): string {
+    return date.toTimeString();
+  }
+
+  /**
+   * Format date to custom format
+   */
+  static format(date: Date, format: string): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return format
+      .replace('YYYY', String(year))
+      .replace('MM', month)
+      .replace('DD', day)
+      .replace('HH', hours)
+      .replace('mm', minutes)
+      .replace('ss', seconds);
+  }
+
+  /**
+   * Get relative time string (e.g., "2 hours ago")
+   */
+  static getRelativeTime(date: Date, now: Date = new Date()): string {
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    if (diffSeconds < 60) return 'just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    if (diffWeeks < 4) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
+    if (diffMonths < 12) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+    return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
   }
 
   /**
@@ -28,52 +84,106 @@ export class DateUtils {
   }
 
   /**
-   * Add months to date
+   * Add hours to date
    */
-  static addMonths(date: Date, months: number): Date {
+  static addHours(date: Date, hours: number): Date {
     const result = new Date(date);
-    result.setMonth(result.getMonth() + months);
+    result.setHours(result.getHours() + hours);
     return result;
   }
 
   /**
-   * Add years to date
+   * Add minutes to date
    */
-  static addYears(date: Date, years: number): Date {
+  static addMinutes(date: Date, minutes: number): Date {
     const result = new Date(date);
-    result.setFullYear(result.getFullYear() + years);
+    result.setMinutes(result.getMinutes() + minutes);
     return result;
   }
 
   /**
-   * Subtract days from date
+   * Add seconds to date
    */
-  static subtractDays(date: Date, days: number): Date {
-    return this.addDays(date, -days);
+  static addSeconds(date: Date, seconds: number): Date {
+    const result = new Date(date);
+    result.setSeconds(result.getSeconds() + seconds);
+    return result;
   }
 
   /**
-   * Get difference in days between two dates
+   * Start of day
    */
-  static daysDifference(date1: Date, date2: Date): number {
-    const msPerDay = 24 * 60 * 60 * 1000;
-    return Math.floor((date2.getTime() - date1.getTime()) / msPerDay);
+  static startOfDay(date: Date): Date {
+    const result = new Date(date);
+    result.setHours(0, 0, 0, 0);
+    return result;
   }
 
   /**
-   * Get difference in hours
+   * End of day
    */
-  static hoursDifference(date1: Date, date2: Date): number {
-    const msPerHour = 60 * 60 * 1000;
-    return Math.floor((date2.getTime() - date1.getTime()) / msPerHour);
+  static endOfDay(date: Date): Date {
+    const result = new Date(date);
+    result.setHours(23, 59, 59, 999);
+    return result;
   }
 
   /**
-   * Get difference in minutes
+   * Start of week
    */
-  static minutesDifference(date1: Date, date2: Date): number {
-    const msPerMinute = 60 * 1000;
-    return Math.floor((date2.getTime() - date1.getTime()) / msPerMinute);
+  static startOfWeek(date: Date): Date {
+    const result = new Date(date);
+    const day = result.getDay();
+    const diff = result.getDate() - day;
+    result.setDate(diff);
+    return this.startOfDay(result);
+  }
+
+  /**
+   * End of week
+   */
+  static endOfWeek(date: Date): Date {
+    const result = new Date(date);
+    const day = result.getDay();
+    const diff = result.getDate() + (6 - day);
+    result.setDate(diff);
+    return this.endOfDay(result);
+  }
+
+  /**
+   * Start of month
+   */
+  static startOfMonth(date: Date): Date {
+    const result = new Date(date);
+    result.setDate(1);
+    return this.startOfDay(result);
+  }
+
+  /**
+   * End of month
+   */
+  static endOfMonth(date: Date): Date {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + 1, 0);
+    return this.endOfDay(result);
+  }
+
+  /**
+   * Start of year
+   */
+  static startOfYear(date: Date): Date {
+    const result = new Date(date);
+    result.setMonth(0, 1);
+    return this.startOfDay(result);
+  }
+
+  /**
+   * End of year
+   */
+  static endOfYear(date: Date): Date {
+    const result = new Date(date);
+    result.setMonth(11, 31);
+    return this.endOfDay(result);
   }
 
   /**
@@ -88,7 +198,7 @@ export class DateUtils {
    * Check if date is yesterday
    */
   static isYesterday(date: Date): boolean {
-    const yesterday = this.subtractDays(new Date(), 1);
+    const yesterday = this.addDays(new Date(), -1);
     return this.isSameDay(date, yesterday);
   }
 
@@ -101,7 +211,7 @@ export class DateUtils {
   }
 
   /**
-   * Check if two dates are the same day
+   * Check if dates are same day
    */
   static isSameDay(date1: Date, date2: Date): boolean {
     return (
@@ -112,104 +222,77 @@ export class DateUtils {
   }
 
   /**
+   * Check if dates are same month
+   */
+  static isSameMonth(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
+  }
+
+  /**
+   * Check if dates are same year
+   */
+  static isSameYear(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear();
+  }
+
+  /**
    * Check if date is in the past
    */
   static isPast(date: Date): boolean {
-    return date < new Date();
+    return date.getTime() < Date.now();
   }
 
   /**
    * Check if date is in the future
    */
   static isFuture(date: Date): boolean {
-    return date > new Date();
+    return date.getTime() > Date.now();
   }
 
   /**
    * Check if date is between two dates
    */
   static isBetween(date: Date, start: Date, end: Date): boolean {
-    return date >= start && date <= end;
+    const time = date.getTime();
+    return time >= start.getTime() && time <= end.getTime();
   }
 
   /**
-   * Get start of day
+   * Get difference in days
    */
-  static startOfDay(date: Date): Date {
-    const result = new Date(date);
-    result.setHours(0, 0, 0, 0);
-    return result;
+  static differenceInDays(date1: Date, date2: Date): number {
+    const diffMs = date2.getTime() - date1.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
   }
 
   /**
-   * Get end of day
+   * Get difference in hours
    */
-  static endOfDay(date: Date): Date {
-    const result = new Date(date);
-    result.setHours(23, 59, 59, 999);
-    return result;
+  static differenceInHours(date1: Date, date2: Date): number {
+    const diffMs = date2.getTime() - date1.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60));
   }
 
   /**
-   * Get start of week
+   * Get difference in minutes
    */
-  static startOfWeek(date: Date, startDayOfWeek: number = 0): Date {
-    const result = new Date(date);
-    const day = result.getDay();
-    const diff = (day < startDayOfWeek ? 7 : 0) + day - startDayOfWeek;
-    result.setDate(result.getDate() - diff);
-    return this.startOfDay(result);
+  static differenceInMinutes(date1: Date, date2: Date): number {
+    const diffMs = date2.getTime() - date1.getTime();
+    return Math.floor(diffMs / (1000 * 60));
   }
 
   /**
-   * Get end of week
+   * Get difference in seconds
    */
-  static endOfWeek(date: Date, startDayOfWeek: number = 0): Date {
-    const result = this.startOfWeek(date, startDayOfWeek);
-    result.setDate(result.getDate() + 6);
-    return this.endOfDay(result);
-  }
-
-  /**
-   * Get start of month
-   */
-  static startOfMonth(date: Date): Date {
-    const result = new Date(date);
-    result.setDate(1);
-    return this.startOfDay(result);
-  }
-
-  /**
-   * Get end of month
-   */
-  static endOfMonth(date: Date): Date {
-    const result = new Date(date);
-    result.setMonth(result.getMonth() + 1, 0);
-    return this.endOfDay(result);
-  }
-
-  /**
-   * Get start of year
-   */
-  static startOfYear(date: Date): Date {
-    const result = new Date(date);
-    result.setMonth(0, 1);
-    return this.startOfDay(result);
-  }
-
-  /**
-   * Get end of year
-   */
-  static endOfYear(date: Date): Date {
-    const result = new Date(date);
-    result.setMonth(11, 31);
-    return this.endOfDay(result);
+  static differenceInSeconds(date1: Date, date2: Date): number {
+    const diffMs = date2.getTime() - date1.getTime();
+    return Math.floor(diffMs / 1000);
   }
 
   /**
    * Get days in month
    */
-  static daysInMonth(date: Date): number {
+  static getDaysInMonth(date: Date): number {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   }
 
@@ -239,6 +322,21 @@ export class DateUtils {
   }
 
   /**
+   * Parse date string
+   */
+  static parse(dateString: string): Date | null {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  /**
+   * Validate date
+   */
+  static isValid(date: any): boolean {
+    return date instanceof Date && !isNaN(date.getTime());
+  }
+
+  /**
    * Get age from birthdate
    */
   static getAge(birthdate: Date): number {
@@ -254,62 +352,22 @@ export class DateUtils {
   }
 
   /**
-   * Format as relative time (e.g., "2 hours ago")
+   * Format duration in milliseconds
    */
-  static formatRelative(date: Date): string {
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  static formatDuration(ms: number): string {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
-    if (seconds < 2592000) return `${Math.floor(seconds / 604800)} weeks ago`;
-    if (seconds < 31536000) return `${Math.floor(seconds / 2592000)} months ago`;
-
-    return `${Math.floor(seconds / 31536000)} years ago`;
+    if (days > 0) return `${days}d ${hours % 24}h`;
+    if (hours > 0) return `${hours}h ${minutes % 60}m`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
   }
 
   /**
-   * Format date
-   */
-  static format(date: Date, format: string): string {
-    const map: Record<string, string> = {
-      YYYY: date.getFullYear().toString(),
-      YY: date.getFullYear().toString().slice(-2),
-      MM: String(date.getMonth() + 1).padStart(2, '0'),
-      M: String(date.getMonth() + 1),
-      DD: String(date.getDate()).padStart(2, '0'),
-      D: String(date.getDate()),
-      HH: String(date.getHours()).padStart(2, '0'),
-      H: String(date.getHours()),
-      hh: String(date.getHours() % 12 || 12).padStart(2, '0'),
-      h: String(date.getHours() % 12 || 12),
-      mm: String(date.getMinutes()).padStart(2, '0'),
-      m: String(date.getMinutes()),
-      ss: String(date.getSeconds()).padStart(2, '0'),
-      s: String(date.getSeconds()),
-      A: date.getHours() < 12 ? 'AM' : 'PM',
-      a: date.getHours() < 12 ? 'am' : 'pm',
-    };
-
-    return format.replace(/YYYY|YY|MM|M|DD|D|HH|H|hh|h|mm|m|ss|s|A|a/g, (match) => map[match]);
-  }
-
-  /**
-   * Parse date from string
-   */
-  static parse(dateString: string, format: string): Date | null {
-    try {
-      // Simple implementation - can be expanded
-      return new Date(dateString);
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Get timezone offset in minutes
+   * Get timezone offset
    */
   static getTimezoneOffset(date: Date = new Date()): number {
     return date.getTimezoneOffset();
@@ -328,95 +386,4 @@ export class DateUtils {
   static fromUTC(date: Date): Date {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   }
-
-  /**
-   * Get day name
-   */
-  static getDayName(date: Date, locale: string = 'en-US'): string {
-    return date.toLocaleDateString(locale, { weekday: 'long' });
-  }
-
-  /**
-   * Get month name
-   */
-  static getMonthName(date: Date, locale: string = 'en-US'): string {
-    return date.toLocaleDateString(locale, { month: 'long' });
-  }
-
-  /**
-   * Get all dates in range
-   */
-  static getDateRange(start: Date, end: Date): Date[] {
-    const dates: Date[] = [];
-    const current = new Date(start);
-
-    while (current <= end) {
-      dates.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
-
-    return dates;
-  }
-
-  /**
-   * Get business days between two dates (excluding weekends)
-   */
-  static getBusinessDays(start: Date, end: Date): number {
-    let count = 0;
-    const current = new Date(start);
-
-    while (current <= end) {
-      const day = current.getDay();
-      if (day !== 0 && day !== 6) {
-        count++;
-      }
-      current.setDate(current.getDate() + 1);
-    }
-
-    return count;
-  }
-
-  /**
-   * Check if weekend
-   */
-  static isWeekend(date: Date): boolean {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  }
-
-  /**
-   * Check if weekday
-   */
-  static isWeekday(date: Date): boolean {
-    return !this.isWeekend(date);
-  }
-
-  /**
-   * Get next weekday
-   */
-  static getNextWeekday(date: Date): Date {
-    const result = new Date(date);
-    result.setDate(result.getDate() + 1);
-
-    while (this.isWeekend(result)) {
-      result.setDate(result.getDate() + 1);
-    }
-
-    return result;
-  }
-
-  /**
-   * Get previous weekday
-   */
-  static getPreviousWeekday(date: Date): Date {
-    const result = new Date(date);
-    result.setDate(result.getDate() - 1);
-
-    while (this.isWeekend(result)) {
-      result.setDate(result.getDate() - 1);
-    }
-
-    return result;
-  }
 }
-
