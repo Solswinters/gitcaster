@@ -6,12 +6,13 @@ export interface WindowSize {
 }
 
 /**
- * Custom hook for tracking window size
- * Returns current window dimensions and updates on resize
+ * Custom hook to track window size
+ * Updates on window resize
  *
  * @example
  * const { width, height } = useWindowSize();
- * const isMobile = width < 768;
+ * 
+ * @returns WindowSize object with width and height
  */
 export function useWindowSize(): WindowSize {
   const [windowSize, setWindowSize] = useState<WindowSize>({
@@ -20,10 +21,7 @@ export function useWindowSize(): WindowSize {
   });
 
   useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
     const handleResize = () => {
       setWindowSize({
@@ -35,7 +33,7 @@ export function useWindowSize(): WindowSize {
     // Add event listener
     window.addEventListener('resize', handleResize);
 
-    // Call handler right away so state gets updated with initial window size
+    // Call handler immediately to set initial size
     handleResize();
 
     // Cleanup
@@ -43,4 +41,34 @@ export function useWindowSize(): WindowSize {
   }, []);
 
   return windowSize;
+}
+
+/**
+ * Hook to track if window width is below a breakpoint
+ */
+export function useIsBelowBreakpoint(breakpoint: number): boolean {
+  const { width } = useWindowSize();
+  return width < breakpoint;
+}
+
+/**
+ * Hook to track if window width is above a breakpoint
+ */
+export function useIsAboveBreakpoint(breakpoint: number): boolean {
+  const { width } = useWindowSize();
+  return width >= breakpoint;
+}
+
+/**
+ * Hook to get the current breakpoint name
+ */
+export function useBreakpoint(): 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' {
+  const { width } = useWindowSize();
+
+  if (width < 640) return 'xs';
+  if (width < 768) return 'sm';
+  if (width < 1024) return 'md';
+  if (width < 1280) return 'lg';
+  if (width < 1536) return 'xl';
+  return '2xl';
 }
