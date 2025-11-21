@@ -1,25 +1,17 @@
 import { useState, useEffect } from 'react';
 
-interface WindowSize {
+export interface WindowSize {
   width: number;
   height: number;
 }
 
 /**
  * Custom hook for tracking window size
- * 
- * Returns current window dimensions
- * 
+ * Returns current window dimensions and updates on resize
+ *
  * @example
- * ```tsx
  * const { width, height } = useWindowSize();
- * 
- * return (
- *   <div>
- *     Window size: {width} x {height}
- *   </div>
- * );
- * ```
+ * const isMobile = width < 768;
  */
 export function useWindowSize(): WindowSize {
   const [windowSize, setWindowSize] = useState<WindowSize>({
@@ -28,7 +20,10 @@ export function useWindowSize(): WindowSize {
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     const handleResize = () => {
       setWindowSize({
@@ -37,14 +32,15 @@ export function useWindowSize(): WindowSize {
       });
     };
 
+    // Add event listener
     window.addEventListener('resize', handleResize);
 
-    // Call handler immediately to set initial size
+    // Call handler right away so state gets updated with initial window size
     handleResize();
 
+    // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return windowSize;
 }
-
