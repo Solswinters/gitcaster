@@ -1195,3 +1195,4 @@ export const CONTRACT_CONFIG = {
   blockExplorer: `https://basescan.org/address/${DEVELOPER_PROFILE_NFT_ADDRESS}`
 } as const;
 
+
