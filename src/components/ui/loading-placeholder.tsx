@@ -10,6 +10,11 @@ interface LoadingPlaceholderProps {
   children: ReactNode;
 }
 
+/**
+ * LoadingPlaceholder utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingPlaceholder.
+ */
 export function LoadingPlaceholder({
   isLoading,
   isEmpty,
