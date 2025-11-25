@@ -1,5 +1,6 @@
-import { cn } from '@/core/utils/cn';
 import { LucideIcon } from 'lucide-react';
+
+import { cn } from '@/core/utils/cn';
 
 interface TimelineItem {
   id: string;
