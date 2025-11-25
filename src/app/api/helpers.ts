@@ -4,14 +4,29 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * getRequestBody utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of getRequestBody.
+ */
 export function getRequestBody<T = any>(request: NextRequest): Promise<T> {
   return request.json();
 }
 
+/**
+ * getQueryParam utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of getQueryParam.
+ */
 export function getQueryParam(request: NextRequest, key: string): string | null {
   return request.nextUrl.searchParams.get(key);
 }
 
+/**
+ * getAllQueryParams utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of getAllQueryParams.
+ */
 export function getAllQueryParams(request: NextRequest): Record<string, string> {
   const params: Record<string, string> = {};
   request.nextUrl.searchParams.forEach((value, key) => {
@@ -20,10 +35,20 @@ export function getAllQueryParams(request: NextRequest): Record<string, string> 
   return params;
 }
 
+/**
+ * createSuccessResponse utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of createSuccessResponse.
+ */
 export function createSuccessResponse<T>(data: T, status = 200): NextResponse {
   return NextResponse.json({ success: true, data }, { status });
 }
 
+/**
+ * createErrorResponse utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of createErrorResponse.
+ */
 export function createErrorResponse(
   message: string,
   status = 400,
@@ -41,6 +66,11 @@ export function createErrorResponse(
   );
 }
 
+/**
+ * createPaginatedResponse utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of createPaginatedResponse.
+ */
 export function createPaginatedResponse<T>(
   data: T[],
   page: number,
@@ -60,6 +90,11 @@ export function createPaginatedResponse<T>(
   });
 }
 
+/**
+ * requireMethod utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of requireMethod.
+ */
 export function requireMethod(
   request: NextRequest,
   allowedMethods: string[]
@@ -73,6 +108,11 @@ export function requireMethod(
   return null;
 }
 
+/**
+ * requireAuth utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of requireAuth.
+ */
 export function requireAuth(request: NextRequest): NextResponse | null {
   const token = request.headers.get('authorization');
   if (!token) {
