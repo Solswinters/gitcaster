@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
 import { generateNonce } from 'siwe';
+
+import { getSession } from '@/lib/session';
 
 export async function GET() {
   try {
