@@ -8,8 +8,18 @@
  * Features include achievement badges, Talent Protocol integration, and soulbound tokens.
  */
 
+/**
+ * DEVELOPER_PROFILE_NFT_ADDRESS utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of DEVELOPER_PROFILE_NFT_ADDRESS.
+ */
 export const DEVELOPER_PROFILE_NFT_ADDRESS = '0x28c783CF53ae745936741869ad3258E1c0cF5B60' as const;
 
+/**
+ * DEVELOPER_PROFILE_NFT_ABI utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of DEVELOPER_PROFILE_NFT_ABI.
+ */
 export const DEVELOPER_PROFILE_NFT_ABI = [
   {
     "type": "constructor",
