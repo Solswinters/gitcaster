@@ -4,6 +4,11 @@ interface LoadingOverlayProps {
   message?: string;
 }
 
+/**
+ * LoadingOverlay utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingOverlay.
+ */
 export function LoadingOverlay({ message }: LoadingOverlayProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
