@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
-import { Button } from './button';
+
 import { RefreshCw } from 'lucide-react';
+
+import { Button } from './button';
 
 interface RetryLoaderProps {
   isLoading: boolean;
