@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { errorReporter } from '@/lib/utils/error-reporting';
 import { ErrorContext } from '@/lib/utils/error-context';
+import { errorReporter } from '@/lib/utils/error-reporting';
 
 /**
  * Hook to track error analytics
