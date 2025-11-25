@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { TalentProtocolScore } from '@/types';
 
 const TALENT_PROTOCOL_API_BASE = 'https://api.talentprotocol.com/api/v2';
