@@ -1,5 +1,6 @@
-import { cn } from '@/core/utils/cn';
 import { AlertCircle, CheckCircle, Info, XCircle } from 'lucide-react';
+
+import { cn } from '@/core/utils/cn';
 
 interface AlertProps {
   children: React.ReactNode;
