@@ -1,5 +1,6 @@
-import { checkDatabaseHealth, executeWithRetry } from '@/lib/db/connection-pool';
 import { PrismaClient } from '@prisma/client';
+
+import { checkDatabaseHealth, executeWithRetry } from '@/lib/db/connection-pool';
 
 // Mock Prisma Client
 jest.mock('@prisma/client', () => {
