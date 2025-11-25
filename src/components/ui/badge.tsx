@@ -6,6 +6,11 @@ interface BadgeProps {
   className?: string;
 }
 
+/**
+ * Badge utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Badge.
+ */
 export function Badge({ children, variant = 'default', className }: BadgeProps) {
   return (
     <span
