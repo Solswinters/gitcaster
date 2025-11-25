@@ -6,6 +6,11 @@ interface NetworkErrorProps {
   onRetry?: () => void;
 }
 
+/**
+ * NetworkError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of NetworkError.
+ */
 export function NetworkError({ onRetry }: NetworkErrorProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
