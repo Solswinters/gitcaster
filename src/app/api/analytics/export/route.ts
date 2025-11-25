@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getIronSession } from 'iron-session'
-import { sessionOptions } from '@/lib/session/config'
+
 import { ReportGenerator } from '@/lib/analytics/report-generator'
+import { sessionOptions } from '@/lib/session/config'
 
 export async function POST(request: NextRequest) {
   try {
