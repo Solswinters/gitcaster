@@ -4,6 +4,11 @@ import { GitHubClient, exchangeCodeForToken } from '@/lib/github/client';
 import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/db/prisma';
 
+/**
+ * POST utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of POST.
+ */
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
