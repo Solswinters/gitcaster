@@ -55,3 +55,8 @@ Thumbs.db
 
 # Test
 .jest-cache
+
+# Auto-generated directories
+scripts/
+*.log
+.DS_Store
