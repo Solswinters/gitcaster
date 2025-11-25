@@ -7,6 +7,11 @@ interface TimeoutErrorProps {
   message?: string;
 }
 
+/**
+ * TimeoutError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of TimeoutError.
+ */
 export function TimeoutError({ 
   onRetry,
   message = 'The request took too long to complete.' 
