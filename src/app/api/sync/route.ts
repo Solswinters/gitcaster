@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+import { GitHubClient, exchangeCodeForToken } from '@/lib/github/client';
 import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/db/prisma';
-import { GitHubClient, exchangeCodeForToken } from '@/lib/github/client';
 
 export async function POST(request: NextRequest) {
   try {
