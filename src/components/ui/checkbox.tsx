@@ -5,6 +5,11 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   label?: string;
 }
 
+/**
+ * Checkbox utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Checkbox.
+ */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, label, id, ...props }, ref) => {
     const checkboxId = id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
