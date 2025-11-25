@@ -6,6 +6,11 @@ interface ErrorIconProps {
   className?: string;
 }
 
+/**
+ * ErrorIcon utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorIcon.
+ */
 export function ErrorIcon({ type = 'error', size = 20, className = '' }: ErrorIconProps) {
   const icons = {
     error: AlertCircle,
