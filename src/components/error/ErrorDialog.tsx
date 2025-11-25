@@ -12,6 +12,11 @@ interface ErrorDialogProps {
   type?: 'error' | 'warning' | 'critical';
 }
 
+/**
+ * ErrorDialog utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorDialog.
+ */
 export function ErrorDialog({
   isOpen,
   onClose,
