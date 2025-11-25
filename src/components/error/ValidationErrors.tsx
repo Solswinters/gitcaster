@@ -4,6 +4,11 @@ interface ValidationErrorsProps {
   errors: string[];
 }
 
+/**
+ * ValidationErrors utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ValidationErrors.
+ */
 export function ValidationErrors({ errors }: ValidationErrorsProps) {
   if (errors.length === 0) return null;
 
