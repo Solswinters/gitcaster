@@ -1,5 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
 import { SearchBar } from '@/components/search/SearchBar';
 
 describe('SearchBar', () => {
