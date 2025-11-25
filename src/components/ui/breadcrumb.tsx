@@ -13,6 +13,11 @@ interface BreadcrumbProps {
   className?: string;
 }
 
+/**
+ * Breadcrumb utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Breadcrumb.
+ */
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className={cn('flex items-center space-x-2 text-sm', className)}>
