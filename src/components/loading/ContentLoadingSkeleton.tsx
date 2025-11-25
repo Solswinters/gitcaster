@@ -1,3 +1,8 @@
+/**
+ * ContentLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ContentLoadingSkeleton.
+ */
 export function ContentLoadingSkeleton() {
   return (
     <div className="space-y-4 animate-pulse">
