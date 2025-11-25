@@ -9,6 +9,11 @@ interface AvatarProps {
   className?: string;
 }
 
+/**
+ * Avatar utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Avatar.
+ */
 export function Avatar({ src, alt = 'Avatar', size = 'md', className }: AvatarProps) {
   const sizeClasses = {
     sm: 'h-8 w-8',
