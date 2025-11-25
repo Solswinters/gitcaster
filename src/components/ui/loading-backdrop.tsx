@@ -5,6 +5,11 @@ interface LoadingBackdropProps {
   transparent?: boolean;
 }
 
+/**
+ * LoadingBackdrop utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingBackdrop.
+ */
 export function LoadingBackdrop({ message, transparent = false }: LoadingBackdropProps) {
   return (
     <div
