@@ -8,6 +8,11 @@ interface ErrorPopoverProps {
   trigger?: 'hover' | 'click';
 }
 
+/**
+ * ErrorPopover utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorPopover.
+ */
 export function ErrorPopover({ 
   message, 
   children, 
