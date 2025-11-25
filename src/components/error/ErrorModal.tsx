@@ -1,6 +1,8 @@
-import { X, AlertTriangle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
+
+import { X, AlertTriangle } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 interface ErrorModalProps {
   isOpen: boolean;
