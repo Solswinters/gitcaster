@@ -16,6 +16,11 @@ interface AccordionProps {
   className?: string;
 }
 
+/**
+ * Accordion utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Accordion.
+ */
 export function Accordion({ items, allowMultiple = false, className }: AccordionProps) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
