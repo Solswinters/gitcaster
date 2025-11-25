@@ -1,7 +1,7 @@
 import React from 'react'
-import { render, screen } from '../../../utils/test-helpers'
 import ProfileHeader from '@/components/profile/ProfileHeader'
 import { mockGitHubUser } from '../../../utils/mock-data'
+import { render, screen } from '../../../utils/test-helpers'
 
 describe('ProfileHeader Component', () => {
   const mockProfile = {
