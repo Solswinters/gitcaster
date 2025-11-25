@@ -3,6 +3,11 @@ interface ErrorSummaryProps {
   title?: string;
 }
 
+/**
+ * ErrorSummary utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorSummary.
+ */
 export function ErrorSummary({ errors, title = 'Please fix the following errors:' }: ErrorSummaryProps) {
   if (errors.length === 0) return null;
 
