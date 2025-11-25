@@ -1,3 +1,8 @@
+/**
+ * PageLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of PageLoadingSkeleton.
+ */
 export function PageLoadingSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50 p-6 animate-pulse">
