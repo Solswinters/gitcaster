@@ -4,6 +4,11 @@ interface MaintenanceErrorProps {
   estimatedTime?: string;
 }
 
+/**
+ * MaintenanceError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of MaintenanceError.
+ */
 export function MaintenanceError({ estimatedTime }: MaintenanceErrorProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
