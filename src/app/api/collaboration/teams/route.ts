@@ -3,6 +3,11 @@ import { getIronSession } from 'iron-session'
 
 import { sessionOptions } from '@/lib/session/config'
 
+/**
+ * GET utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of GET.
+ */
 export async function GET(request: NextRequest) {
   try {
     const session = await getIronSession(request, NextResponse.next().cookies, sessionOptions)
@@ -28,6 +33,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * POST utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of POST.
+ */
 export async function POST(request: NextRequest) {
   try {
     const session = await getIronSession(request, NextResponse.next().cookies, sessionOptions)
