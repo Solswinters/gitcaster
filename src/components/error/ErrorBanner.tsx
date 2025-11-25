@@ -6,6 +6,11 @@ interface ErrorBannerProps {
   persistent?: boolean;
 }
 
+/**
+ * ErrorBanner utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorBanner.
+ */
 export function ErrorBanner({ message, onDismiss, persistent = false }: ErrorBannerProps) {
   return (
     <div className="bg-red-50 border-l-4 border-red-600 p-4">
