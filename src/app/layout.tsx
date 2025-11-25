@@ -6,6 +6,11 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+/**
+ * metadata utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of metadata.
+ */
 export const metadata: Metadata = {
   title: 'GitCaster - Showcase Your GitHub on the Blockchain',
   description: 'Connect your GitHub profile with blockchain technology using Talent Protocol',
