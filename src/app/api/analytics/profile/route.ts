@@ -5,6 +5,11 @@ import { getSession } from '@/lib/session'
 import { logger } from '@/lib/monitoring/logger'
 import { prisma } from '@/lib/db/prisma'
 
+/**
+ * dynamic utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of dynamic.
+ */
 export const dynamic = 'force-dynamic'
 
 /**
