@@ -12,6 +12,11 @@ interface EmptyStateProps {
   };
 }
 
+/**
+ * EmptyState utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of EmptyState.
+ */
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
