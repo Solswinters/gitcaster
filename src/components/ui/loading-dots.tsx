@@ -1,3 +1,8 @@
+/**
+ * LoadingDots utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingDots.
+ */
 export function LoadingDots() {
   return (
     <div className="flex space-x-1">
