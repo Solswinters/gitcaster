@@ -1,6 +1,7 @@
-import { Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Shield } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 interface AuthErrorProps {
   message?: string;
