@@ -4,6 +4,11 @@ interface FullPageLoaderProps {
   message?: string;
 }
 
+/**
+ * FullPageLoader utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of FullPageLoader.
+ */
 export function FullPageLoader({ message = 'Loading...' }: FullPageLoaderProps) {
   return (
     <div className="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
