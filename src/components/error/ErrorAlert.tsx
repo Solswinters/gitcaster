@@ -7,6 +7,11 @@ interface ErrorAlertProps {
   variant?: 'error' | 'warning';
 }
 
+/**
+ * ErrorAlert utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorAlert.
+ */
 export function ErrorAlert({ 
   message, 
   title,
