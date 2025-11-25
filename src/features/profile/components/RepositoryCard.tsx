@@ -1,5 +1,6 @@
-import { Card } from '@/components/ui/card';
 import { Star, GitFork, ExternalLink } from 'lucide-react';
+
+import { Card } from '@/components/ui/card';
 import { GitHubRepo } from '@/types';
 
 interface RepositoryCardProps {
