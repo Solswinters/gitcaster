@@ -6,6 +6,11 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
 }
 
+/**
+ * Input utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Input.
+ */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, label, id, ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
