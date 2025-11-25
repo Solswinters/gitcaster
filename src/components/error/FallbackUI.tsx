@@ -1,6 +1,7 @@
-import { Home, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Home, RefreshCw } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 interface FallbackUIProps {
   error?: Error;
