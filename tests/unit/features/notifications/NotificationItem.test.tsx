@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { NotificationItem } from '@/features/notifications/components/NotificationItem';
 
 describe('NotificationItem', () => {
