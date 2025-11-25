@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+
 import { SkillsShowcase } from '@/components/profile/SkillsShowcase';
 
 const mockSkills = [
