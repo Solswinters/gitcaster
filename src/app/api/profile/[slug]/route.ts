@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/lib/db/prisma';
 
+/**
+ * GET utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of GET.
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
