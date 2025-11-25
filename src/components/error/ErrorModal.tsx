@@ -12,6 +12,11 @@ interface ErrorModalProps {
   onRetry?: () => void;
 }
 
+/**
+ * ErrorModal utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorModal.
+ */
 export function ErrorModal({ 
   isOpen, 
   onClose, 
