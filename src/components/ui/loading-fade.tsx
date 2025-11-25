@@ -5,6 +5,11 @@ interface LoadingFadeProps {
   children: ReactNode;
 }
 
+/**
+ * LoadingFade utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingFade.
+ */
 export function LoadingFade({ isLoading, children }: LoadingFadeProps) {
   return (
     <div
