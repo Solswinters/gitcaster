@@ -1,3 +1,8 @@
+/**
+ * TableLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of TableLoadingSkeleton.
+ */
 export function TableLoadingSkeleton({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
   return (
     <div className="w-full animate-pulse">
