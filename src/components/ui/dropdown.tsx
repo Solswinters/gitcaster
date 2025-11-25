@@ -18,6 +18,11 @@ interface DropdownProps {
   className?: string;
 }
 
+/**
+ * Dropdown utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Dropdown.
+ */
 export function Dropdown({ trigger, items, align = 'left', className }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
