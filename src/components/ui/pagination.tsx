@@ -9,6 +9,11 @@ interface PaginationProps {
   className?: string;
 }
 
+/**
+ * Pagination utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Pagination.
+ */
 export function Pagination({ currentPage, totalPages, onPageChange, className }: PaginationProps) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   
