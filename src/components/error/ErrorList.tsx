@@ -10,6 +10,11 @@ interface ErrorListProps {
   onDismiss?: (id: string) => void;
 }
 
+/**
+ * ErrorList utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorList.
+ */
 export function ErrorList({ errors, onDismiss }: ErrorListProps) {
   if (errors.length === 0) return null;
 
