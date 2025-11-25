@@ -3,6 +3,11 @@ import { generateNonce } from 'siwe';
 
 import { getSession } from '@/lib/session';
 
+/**
+ * GET utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of GET.
+ */
 export async function GET() {
   try {
     const session = await getSession();
