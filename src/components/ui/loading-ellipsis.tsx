@@ -1,3 +1,8 @@
+/**
+ * LoadingEllipsis utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingEllipsis.
+ */
 export function LoadingEllipsis() {
   return (
     <span className="inline-flex space-x-1">
