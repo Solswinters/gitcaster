@@ -1,6 +1,11 @@
 import { HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/core/utils/cn';
 
+/**
+ * Card utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Card.
+ */
 export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
@@ -16,6 +21,11 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 Card.displayName = 'Card';
 
+/**
+ * CardHeader utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CardHeader.
+ */
 export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
@@ -27,6 +37,11 @@ export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 );
 CardHeader.displayName = 'CardHeader';
 
+/**
+ * CardTitle utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CardTitle.
+ */
 export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h3
@@ -38,6 +53,11 @@ export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadi
 );
 CardTitle.displayName = 'CardTitle';
 
+/**
+ * CardContent utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CardContent.
+ */
 export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
