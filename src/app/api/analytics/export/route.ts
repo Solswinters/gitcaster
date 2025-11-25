@@ -4,6 +4,11 @@ import { getIronSession } from 'iron-session'
 import { ReportGenerator } from '@/lib/analytics/report-generator'
 import { sessionOptions } from '@/lib/session/config'
 
+/**
+ * POST utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of POST.
+ */
 export async function POST(request: NextRequest) {
   try {
     const session = await getIronSession(request, NextResponse.next().cookies, sessionOptions)
