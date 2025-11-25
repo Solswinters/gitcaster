@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useToast } from './use-toast';
 import { formatErrorMessage } from '@/lib/utils/error-formatter';
+import { useToast } from './use-toast';
 
 /**
  * Hook for showing error notifications
