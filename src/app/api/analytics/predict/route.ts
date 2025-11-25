@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getIronSession } from 'iron-session'
-import { sessionOptions } from '@/lib/session/config'
+
 import { PredictiveAnalytics } from '@/lib/analytics/predictive-analytics'
 import { logError, logInfo } from '@/lib/logging/structured-logger'
+import { sessionOptions } from '@/lib/session/config'
 
 /**
  * GET /api/analytics/predict
