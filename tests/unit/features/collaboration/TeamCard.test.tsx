@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { TeamCard, TeamMember } from '@/features/collaboration/components/TeamCard';
 
 const mockMembers: TeamMember[] = [
