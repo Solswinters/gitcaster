@@ -8,6 +8,11 @@ interface AuthErrorProps {
   showLoginButton?: boolean;
 }
 
+/**
+ * AuthError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of AuthError.
+ */
 export function AuthError({ 
   message = 'You need to be signed in to access this page.',
   showLoginButton = true
