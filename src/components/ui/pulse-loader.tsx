@@ -1,3 +1,8 @@
+/**
+ * PulseLoader utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of PulseLoader.
+ */
 export function PulseLoader() {
   return (
     <div className="flex space-x-2">
