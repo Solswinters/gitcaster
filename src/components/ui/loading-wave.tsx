@@ -1,3 +1,8 @@
+/**
+ * LoadingWave utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingWave.
+ */
 export function LoadingWave() {
   return (
     <div className="flex items-end space-x-1 h-8">
