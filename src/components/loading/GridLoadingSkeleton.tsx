@@ -1,3 +1,8 @@
+/**
+ * GridLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of GridLoadingSkeleton.
+ */
 export function GridLoadingSkeleton({ 
   items = 6, 
   columns = 3 
