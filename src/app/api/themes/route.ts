@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+
+import { PRESET_THEMES, validateTheme, themeToDatabase } from '@/lib/themes/presets'
 import { getSession } from '@/lib/session'
 import { logger } from '@/lib/monitoring/logger'
-import { PRESET_THEMES, validateTheme, themeToDatabase } from '@/lib/themes/presets'
+import { prisma } from '@/lib/db/prisma'
 
 export const dynamic = 'force-dynamic'
 
