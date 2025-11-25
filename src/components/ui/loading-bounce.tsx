@@ -3,6 +3,11 @@ interface LoadingBounceProps {
   color?: string;
 }
 
+/**
+ * LoadingBounce utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingBounce.
+ */
 export function LoadingBounce({ size = 'md', color = 'bg-blue-600' }: LoadingBounceProps) {
   const sizeClasses = {
     sm: 'w-2 h-2',
