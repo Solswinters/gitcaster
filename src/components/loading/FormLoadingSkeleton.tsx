@@ -1,3 +1,8 @@
+/**
+ * FormLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of FormLoadingSkeleton.
+ */
 export function FormLoadingSkeleton({ fields = 4 }: { fields?: number }) {
   return (
     <div className="space-y-6 animate-pulse">
