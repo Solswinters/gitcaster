@@ -1,3 +1,8 @@
+/**
+ * DashboardLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of DashboardLoadingSkeleton.
+ */
 export function DashboardLoadingSkeleton() {
   return (
     <div className="animate-pulse space-y-8">
