@@ -8,6 +8,11 @@ interface PermissionErrorProps {
   action?: string;
 }
 
+/**
+ * PermissionError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of PermissionError.
+ */
 export function PermissionError({ 
   resource = 'this resource',
   action = 'access'
