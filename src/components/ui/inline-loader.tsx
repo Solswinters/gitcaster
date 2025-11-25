@@ -7,6 +7,11 @@ interface InlineLoaderProps {
   className?: string;
 }
 
+/**
+ * InlineLoader utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of InlineLoader.
+ */
 export function InlineLoader({ size = 'md', className }: InlineLoaderProps) {
   const sizeClasses = {
     sm: 'h-4 w-4',
