@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+
 import { createSearchQuery, SearchFilters } from '@/lib/search/query-builder'
 import { logger } from '@/lib/monitoring/logger'
+import { prisma } from '@/lib/db/prisma'
 
 export const dynamic = 'force-dynamic'
 
