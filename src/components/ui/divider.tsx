@@ -6,6 +6,11 @@ interface DividerProps {
   label?: string;
 }
 
+/**
+ * Divider utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Divider.
+ */
 export function Divider({ orientation = 'horizontal', className, label }: DividerProps) {
   if (orientation === 'vertical') {
     return (
