@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, screen } from '../../../utils/test-helpers'
 import GitHubStats from '@/components/profile/GitHubStats'
+import { render, screen } from '../../../utils/test-helpers'
 
 describe('GitHubStats Component', () => {
   const mockStats = {
