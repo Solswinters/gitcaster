@@ -1,3 +1,8 @@
+/**
+ * CardLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CardLoadingSkeleton.
+ */
 export function CardLoadingSkeleton({ count = 1 }: { count?: number }) {
   return (
     <>
