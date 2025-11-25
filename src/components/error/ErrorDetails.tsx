@@ -7,6 +7,11 @@ interface ErrorDetailsProps {
   showStackTrace?: boolean;
 }
 
+/**
+ * ErrorDetails utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorDetails.
+ */
 export function ErrorDetails({ error, showStackTrace = true }: ErrorDetailsProps) {
   const [expanded, setExpanded] = useState(false);
 
