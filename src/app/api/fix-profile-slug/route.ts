@@ -4,6 +4,11 @@ import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/db/prisma';
 
 // One-time endpoint to fix existing profile slugs
+/**
+ * POST utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of POST.
+ */
 export async function POST() {
   try {
     const session = await getSession();
