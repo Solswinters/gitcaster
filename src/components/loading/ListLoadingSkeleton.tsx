@@ -1,3 +1,8 @@
+/**
+ * ListLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ListLoadingSkeleton.
+ */
 export function ListLoadingSkeleton({ items = 5 }: { items?: number }) {
   return (
     <div className="space-y-4 animate-pulse">
