@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { TalentProtocolClient, getTalentProtocolScore } from '@/lib/talent-protocol/client'
 import { mockTalentScore } from '../../../utils/mock-data'
 
