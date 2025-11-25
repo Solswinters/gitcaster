@@ -9,6 +9,11 @@ export interface ApiMiddleware {
   (request: NextRequest): Promise<NextResponse | null>;
 }
 
+/**
+ * composeMiddleware utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of composeMiddleware.
+ */
 export function composeMiddleware(...middlewares: ApiMiddleware[]): ApiMiddleware {
   return async (request: NextRequest) => {
     for (const middleware of middlewares) {
@@ -19,6 +24,11 @@ export function composeMiddleware(...middlewares: ApiMiddleware[]): ApiMiddlewar
   };
 }
 
+/**
+ * withErrorHandling utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of withErrorHandling.
+ */
 export async function withErrorHandling(
   handler: (request: NextRequest) => Promise<NextResponse>,
   request: NextRequest
@@ -30,6 +40,11 @@ export async function withErrorHandling(
   }
 }
 
+/**
+ * cors utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of cors.
+ */
 export function cors(request: NextRequest): NextResponse | null {
   const origin = request.headers.get('origin');
   const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
