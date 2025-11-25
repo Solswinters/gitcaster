@@ -4,6 +4,11 @@ import { getSession } from '@/lib/session';
 import { getTalentProtocolScore } from '@/lib/talent-protocol/client';
 import { prisma } from '@/lib/db/prisma';
 
+/**
+ * POST utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of POST.
+ */
 export async function POST() {
   try {
     const session = await getSession();
