@@ -8,6 +8,11 @@ interface APIErrorDisplayProps {
   onRetry?: () => void;
 }
 
+/**
+ * APIErrorDisplay utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of APIErrorDisplay.
+ */
 export function APIErrorDisplay({ statusCode, message, onRetry }: APIErrorDisplayProps) {
   const getTitle = () => {
     if (statusCode === 401) return 'Unauthorized';
