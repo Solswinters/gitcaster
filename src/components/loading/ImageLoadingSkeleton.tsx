@@ -3,6 +3,11 @@ interface ImageLoadingSkeletonProps {
   className?: string;
 }
 
+/**
+ * ImageLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ImageLoadingSkeleton.
+ */
 export function ImageLoadingSkeleton({ 
   aspectRatio = 'aspect-video',
   className = ''
