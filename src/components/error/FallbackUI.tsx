@@ -8,6 +8,11 @@ interface FallbackUIProps {
   resetError?: () => void;
 }
 
+/**
+ * FallbackUI utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of FallbackUI.
+ */
 export function FallbackUI({ error, resetError }: FallbackUIProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
