@@ -7,6 +7,11 @@ interface NotFoundErrorProps {
   resource?: string;
 }
 
+/**
+ * NotFoundError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of NotFoundError.
+ */
 export function NotFoundError({ resource = 'page' }: NotFoundErrorProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
