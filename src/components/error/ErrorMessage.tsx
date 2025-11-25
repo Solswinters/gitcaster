@@ -5,6 +5,11 @@ interface ErrorMessageProps {
   title?: string;
 }
 
+/**
+ * ErrorMessage utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorMessage.
+ */
 export function ErrorMessage({ message, title = 'Error' }: ErrorMessageProps) {
   return (
     <div className="rounded-lg bg-red-50 border border-red-200 p-4">
