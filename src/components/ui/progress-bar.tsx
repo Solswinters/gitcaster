@@ -7,6 +7,11 @@ interface ProgressBarProps {
   showLabel?: boolean;
 }
 
+/**
+ * ProgressBar utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ProgressBar.
+ */
 export function ProgressBar({ value, max = 100, className, showLabel = false }: ProgressBarProps) {
   const percentage = Math.min((value / max) * 100, 100);
 
