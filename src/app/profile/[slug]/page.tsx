@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+
 import { ProfilePageClient } from '@/components/profile/ProfilePageClient';
 
 async function getProfile(slug: string) {
