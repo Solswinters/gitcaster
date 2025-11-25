@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
 import { SiweMessage } from 'siwe';
+
+import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/db/prisma';
 
 export async function POST(request: NextRequest) {
