@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { ConnectButton } from '@/components/auth/ConnectButton';
 
+/**
+ * Header utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Header.
+ */
 export function Header() {
   return (
     <header className="border-b border-gray-200 bg-white">
