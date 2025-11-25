@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getIronSession } from 'iron-session'
-import { sessionOptions } from '@/lib/session/config'
-import { prisma } from '@/lib/db/prisma'
+
 import { CareerProgressionTracker } from '@/lib/analytics/career-progression'
 import { logError, logInfo } from '@/lib/logging/structured-logger'
+import { prisma } from '@/lib/db/prisma'
+import { sessionOptions } from '@/lib/session/config'
 
 /**
  * GET /api/analytics/career
