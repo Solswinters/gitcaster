@@ -1,5 +1,6 @@
-import { X, AlertCircle } from 'lucide-react';
 import { useEffect } from 'react';
+
+import { X, AlertCircle } from 'lucide-react';
 
 interface ErrorToastProps {
   message: string;
