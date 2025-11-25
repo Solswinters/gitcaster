@@ -8,6 +8,11 @@ interface ErrorCardProps {
   onRetry?: () => void;
 }
 
+/**
+ * ErrorCard utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorCard.
+ */
 export function ErrorCard({ 
   title = 'Something went wrong', 
   message, 
