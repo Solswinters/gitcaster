@@ -1,3 +1,8 @@
+/**
+ * LoadingBar utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingBar.
+ */
 export function LoadingBar() {
   return (
     <div className="w-full h-1 bg-gray-200 overflow-hidden">
