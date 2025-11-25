@@ -8,6 +8,11 @@ interface LoadingButtonContentProps {
   children: ReactNode;
 }
 
+/**
+ * LoadingButtonContent utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingButtonContent.
+ */
 export function LoadingButtonContent({ 
   isLoading, 
   loadingText,
