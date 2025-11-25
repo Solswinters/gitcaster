@@ -5,6 +5,11 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   label?: string;
 }
 
+/**
+ * Radio utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Radio.
+ */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   ({ className, label, id, ...props }, ref) => {
     const radioId = id || `radio-${Math.random().toString(36).substr(2, 9)}`;
