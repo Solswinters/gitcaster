@@ -10,6 +10,11 @@ interface CodeBlockProps {
   className?: string;
 }
 
+/**
+ * CodeBlock utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CodeBlock.
+ */
 export function CodeBlock({ code, language, className }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
