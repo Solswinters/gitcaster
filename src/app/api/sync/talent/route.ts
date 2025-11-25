@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+
 import { getSession } from '@/lib/session';
-import { prisma } from '@/lib/db/prisma';
 import { getTalentProtocolScore } from '@/lib/talent-protocol/client';
+import { prisma } from '@/lib/db/prisma';
 
 export async function POST() {
   try {
