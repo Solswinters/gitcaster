@@ -16,6 +16,11 @@ const icons = {
   info: Info,
 };
 
+/**
+ * Alert utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Alert.
+ */
 export function Alert({ children, variant = 'default', className }: AlertProps) {
   const Icon = icons[variant];
   
