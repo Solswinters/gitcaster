@@ -5,6 +5,11 @@ interface LoadingScreenProps {
   fullScreen?: boolean;
 }
 
+/**
+ * LoadingScreen utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingScreen.
+ */
 export function LoadingScreen({ message, fullScreen = true }: LoadingScreenProps) {
   return (
     <div className={`flex flex-col items-center justify-center ${fullScreen ? 'min-h-screen' : 'min-h-[400px]'} bg-gradient-to-b from-blue-50 to-white`}>
