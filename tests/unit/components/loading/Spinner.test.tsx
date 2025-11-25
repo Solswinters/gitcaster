@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, screen } from '../../../utils/test-helpers'
 import { Spinner } from '@/components/ui/spinner'
+import { render, screen } from '../../../utils/test-helpers'
 
 describe('Spinner Component', () => {
   it('should render spinner', () => {
