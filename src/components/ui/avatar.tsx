@@ -1,5 +1,6 @@
-import { cn } from '@/core/utils/cn';
 import { User } from 'lucide-react';
+
+import { cn } from '@/core/utils/cn';
 
 interface AvatarProps {
   src?: string;
