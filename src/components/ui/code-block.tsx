@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { cn } from '@/core/utils/cn';
+
 import { Check, Copy } from 'lucide-react';
+
+import { cn } from '@/core/utils/cn';
 
 interface CodeBlockProps {
   code: string;
