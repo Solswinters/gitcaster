@@ -12,6 +12,11 @@ interface ModalProps {
   className?: string;
 }
 
+/**
+ * Modal utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Modal.
+ */
 export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
