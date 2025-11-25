@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { render, screen } from '@testing-library/react';
+
 import { ProfileCard } from '@/features/profile/components/ProfileCard';
 
 describe('ProfileCard', () => {
