@@ -5,6 +5,11 @@ interface RateLimitErrorProps {
   message?: string;
 }
 
+/**
+ * RateLimitError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of RateLimitError.
+ */
 export function RateLimitError({ 
   retryAfter,
   message = 'Too many requests. Please wait before trying again.'
