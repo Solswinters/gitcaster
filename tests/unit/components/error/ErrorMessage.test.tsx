@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, screen } from '../../../utils/test-helpers'
 import ErrorMessage from '@/components/error/ErrorMessage'
+import { render, screen } from '../../../utils/test-helpers'
 
 describe('ErrorMessage Component', () => {
   it('should render error message', () => {
