@@ -3,6 +3,11 @@ interface ProgressStepsProps {
   currentStep: number;
 }
 
+/**
+ * ProgressSteps utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ProgressSteps.
+ */
 export function ProgressSteps({ steps, currentStep }: ProgressStepsProps) {
   return (
     <div className="flex items-center justify-between">
