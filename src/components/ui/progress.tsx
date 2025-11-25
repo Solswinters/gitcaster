@@ -8,6 +8,11 @@ interface ProgressProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * Progress utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of Progress.
+ */
 export function Progress({ 
   value, 
   max = 100, 
