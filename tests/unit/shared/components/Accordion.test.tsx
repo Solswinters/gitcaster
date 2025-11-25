@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { Accordion, type AccordionItem } from '@/shared/components/ui/Accordion';
 
 const mockItems: AccordionItem[] = [
