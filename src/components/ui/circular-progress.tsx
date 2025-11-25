@@ -5,6 +5,11 @@ interface CircularProgressProps {
   className?: string;
 }
 
+/**
+ * CircularProgress utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of CircularProgress.
+ */
 export function CircularProgress({ 
   progress, 
   size = 48, 
