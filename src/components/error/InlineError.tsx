@@ -5,6 +5,11 @@ interface InlineErrorProps {
   className?: string;
 }
 
+/**
+ * InlineError utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of InlineError.
+ */
 export function InlineError({ message, className = '' }: InlineErrorProps) {
   return (
     <div className={`flex items-start gap-2 text-red-600 text-sm mt-1 ${className}`}>
