@@ -1,3 +1,8 @@
+/**
+ * ProfileLoadingSkeleton utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ProfileLoadingSkeleton.
+ */
 export function ProfileLoadingSkeleton() {
   return (
     <div className="animate-pulse">
