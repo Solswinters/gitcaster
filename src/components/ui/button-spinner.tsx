@@ -1,3 +1,8 @@
+/**
+ * ButtonSpinner utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ButtonSpinner.
+ */
 export function ButtonSpinner() {
   return (
     <svg
