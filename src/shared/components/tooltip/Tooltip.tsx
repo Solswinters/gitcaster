@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+
 import { createPortal } from 'react-dom';
+
 import { useComponentBase } from '../../hooks/useComponentBase';
 
 export interface TooltipProps {
