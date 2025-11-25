@@ -4,6 +4,11 @@ import { exchangeCodeForToken, GitHubClient } from '@/lib/github/client';
 import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/db/prisma';
 
+/**
+ * GET utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of GET.
+ */
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
