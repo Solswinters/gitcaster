@@ -2,6 +2,11 @@ interface LoadingTextProps {
   text?: string;
 }
 
+/**
+ * LoadingText utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of LoadingText.
+ */
 export function LoadingText({ text = 'Loading' }: LoadingTextProps) {
   return (
     <div className="flex items-center space-x-2 text-gray-600">
