@@ -8,6 +8,11 @@ interface ErrorToastProps {
   duration?: number;
 }
 
+/**
+ * ErrorToast utility function.
+ * @param props - Component properties or function arguments.
+ * @returns The result of ErrorToast.
+ */
 export function ErrorToast({ message, onClose, duration = 5000 }: ErrorToastProps) {
   useEffect(() => {
     if (duration > 0) {
