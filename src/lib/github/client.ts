@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { GitHubUser, GitHubRepo, GitHubCommit, GitHubPullRequest, GitHubIssue, LanguageStats, ContributionDay } from '@/types';
 
 const GITHUB_API_BASE = 'https://api.github.com';
